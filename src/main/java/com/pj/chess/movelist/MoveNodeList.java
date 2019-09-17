@@ -19,44 +19,6 @@ public class MoveNodeList {
         //		}
     }
 
-    public static void main(String[] args) {
-		/*int[] k=new int[]{1,2,3,4,5,0,0,0,0,0,0};
-		int[] k2=new int[]{8,9,1,1};
-		System.arraycopy(k2, 0, k, 5, k2.length-1);
-
-		for(int vv:k){
-			System.out.println(vv);
-		}*/
-
-        MoveNodeList mn = new MoveNodeList(20);
-        MoveNode moveNode = new MoveNode();
-        moveNode.destChess = 10;
-        mn.add(moveNode);
-        moveNode = new MoveNode();
-        moveNode.destChess = 20;
-        mn.add(moveNode);
-        moveNode = new MoveNode();
-        moveNode.destChess = 30;
-        mn.add(moveNode);
-        moveNode = new MoveNode();
-        moveNode.destChess = 40;
-        mn.add(moveNode);
-
-        MoveNodeList mnTest = new MoveNodeList(10);
-        moveNode = new MoveNode();
-        moveNode.destChess = 70;
-        mnTest.add(moveNode);
-        moveNode = new MoveNode();
-        moveNode.destChess = 100;
-        mnTest.add(moveNode);
-        mnTest.add(moveNode);
-
-        mn.addAll(mnTest);
-        for (int i = 0; i < mn.size; i++) {
-            System.out.println(mn.get(i).destChess);
-        }
-    }
-
     public void clear() {
         size = 0;
     }

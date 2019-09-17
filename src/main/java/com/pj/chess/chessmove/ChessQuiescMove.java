@@ -11,14 +11,6 @@ import static com.pj.chess.ChessConstant.chessRoles;
 
 public class ChessQuiescMove extends ChessMoveAbs {
 
-    //	public static final int BLACKKING=KING+7;    //王
-    //	public static final int BLACKCHARIOT=CHARIOT+7; //车
-    //	public static final int BLACKKNIGHT=KNIGHT+7; //马
-    //	public static final int BLACKGUN=GUN+7; //炮
-    //	public static final int BLACKELEPHANT=ELEPHANT+7; //象
-    //	public static final int BLACKGUARD=GUARD+7; //士
-    //	public static final int BLACKSOLDIER=SOLDIER+7; //兵
-
     public ChessQuiescMove(ChessParam chessParam, TranspositionTable tranTable, EvaluateCompute evaluateCompute) {
         super(chessParam, tranTable, evaluateCompute);
     }
@@ -40,7 +32,8 @@ public class ChessQuiescMove extends ChessMoveAbs {
             int srcScore = 0;
             destScore = EvaluateCompute.chessBaseScore[destChess] + evaluateCompute.chessAttachScore(
                 chessRoles[destChess], destSite);
-            if (destScore >= 150) {  //吃子
+            //吃子
+            if (destScore >= 150) {
                 //要吃的柜子被对手保护
                 srcScore = EvaluateCompute.chessBaseScore[srcChess] + evaluateCompute.chessAttachScore(
                     chessRoles[srcChess], srcSite);
@@ -53,7 +46,8 @@ public class ChessQuiescMove extends ChessMoveAbs {
         //历吏表排序
         moveNode = new MoveNode(srcSite, destSite, srcChess, destChess,
             CHistoryHeuritic.cHistory[ChessConstant.chessRoles_eight[srcChess]][destSite]);
-        generalMoveList.add(moveNode); //不吃子
+        //不吃子
+        generalMoveList.add(moveNode);
     }
 }
 
