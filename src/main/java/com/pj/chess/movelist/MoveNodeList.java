@@ -14,9 +14,9 @@ public class MoveNodeList {
     }
 
     public MoveNodeList(MoveNodeList copy) {
-//		if(copy!=null){
-//			tables=new MoveNode[copy.size];
-//		}
+        //		if(copy!=null){
+        //			tables=new MoveNode[copy.size];
+        //		}
     }
 
     public static void main(String[] args) {
@@ -27,7 +27,6 @@ public class MoveNodeList {
 		for(int vv:k){
 			System.out.println(vv);
 		}*/
-
 
         MoveNodeList mn = new MoveNodeList(20);
         MoveNode moveNode = new MoveNode();
@@ -73,10 +72,7 @@ public class MoveNodeList {
     }
 
     public MoveNode get(int index) {
-        if (index < size)
-            return tables[index];
-        else
-            return null;
+        if (index < size) {return tables[index];} else {return null;}
     }
 
     public void addAll(MoveNodeList moveNodeList) {

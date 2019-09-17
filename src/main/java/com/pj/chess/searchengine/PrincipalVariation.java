@@ -18,13 +18,13 @@ public class PrincipalVariation extends SearchEngine {
     static {
         for (int d = 0; d < 32; d++) {
             for (int k = 0; k < 80; k++) {
-                int v = (int) (d * (1.29) * 155) - (k * d * 10);
+                int v = (int)(d * (1.29) * 155) - (k * d * 10);
                 FutilityScore[d][k] = v;
             }
         }
         for (int d = 0; d < 32; d++) {
-            FutilityMoveCounts[d] = (int) (7.001 + 0.4 * Math.pow(d, 2.0));
-//		      System.out.println(FutilityMoveCounts[d]);
+            FutilityMoveCounts[d] = (int)(7.001 + 0.4 * Math.pow(d, 2.0));
+            //		      System.out.println(FutilityMoveCounts[d]);
         }
     }
 
@@ -34,7 +34,8 @@ public class PrincipalVariation extends SearchEngine {
     public int checkNum = 0;
     public int[] test1Num = new int[10];
     public int[] test1Numpv = new int[10];
-    int r3 = EvaluateCompute.CHARIOTSCORE - 150, r2 = EvaluateCompute.KNIGHTSCORE - 100, r1 = EvaluateCompute.ELEPHANTSCORE - 50;
+    int r3 = EvaluateCompute.CHARIOTSCORE - 150, r2 = EvaluateCompute.KNIGHTSCORE - 100, r1 =
+        EvaluateCompute.ELEPHANTSCORE - 50;
     int RazorDepth = 4;
 
     public PrincipalVariation(ChessParam chessParam, EvaluateCompute evaluate,
@@ -43,6 +44,7 @@ public class PrincipalVariation extends SearchEngine {
         // TODO Auto-generated constructor stub
     }
 
+    @Override
     public int searchMove(int alpha, int beta, int depth) {
         MoveNodesSort.trancount1 = 0;
         MoveNodesSort.trancount2 = 0;
@@ -51,13 +53,14 @@ public class PrincipalVariation extends SearchEngine {
         MoveNodesSort.eatmovecount = 0;
         MoveNodesSort.othercount = 0;
         checkNum = 0;
-//		MoveNodesSort.firsteatcount=0;
+        //		MoveNodesSort.firsteatcount=0;
         test1Num = new int[10];
         test1Numpv = new int[10];
         moveHistory.depth = 0;
         this.setStretchNeedNumByDepth(depth);
         int s = 0;
-        MoveNodesSort moveNodeSort = new MoveNodesSort(swapPlay(moveHistory.play), new MoveNodeList(2), killerMove[depth], chessMove, false);
+        MoveNodesSort moveNodeSort = new MoveNodesSort(swapPlay(moveHistory.play), new MoveNodeList(2),
+            killerMove[depth], chessMove, false);
         MoveNodeList moveNodeList = new MoveNodeList(100);
         MoveNode moveNode = null;
         int initScore = 100;
@@ -86,15 +89,35 @@ public class PrincipalVariation extends SearchEngine {
         }
 
         System.out.println(moveHistory.getNextLink());
-//		System.out.println("tran1->"+values[MoveNodesSort.tran1]+"\tcount->"+MoveNodesSort.trancount1+"\thit->"+Double.valueOf(values[MoveNodesSort.tran1])/MoveNodesSort.trancount1*100+"%"+"\tprotected->"+oppProtected[MoveNodesSort.tran1]+"\tnotProtected->"+oppNotProtected[MoveNodesSort.tran1]);
-//		System.out.println("tran2->"+values[MoveNodesSort.tran2]+"\tcount->"+MoveNodesSort.trancount2+"\thit->"+Double.valueOf(values[MoveNodesSort.tran2])/MoveNodesSort.trancount2*100+"%"+"\tprotected->"+oppProtected[MoveNodesSort.tran2]+"\tnotProtected->"+oppNotProtected[MoveNodesSort.tran2]);
-//		System.out.println("kill1->"+values[MoveNodesSort.kill1]+"\tcount->"+MoveNodesSort.killcount1+"\thit->"+Double.valueOf(values[MoveNodesSort.kill1])/MoveNodesSort.killcount1*100+"%"+"\tprotected->"+oppProtected[MoveNodesSort.kill1]+"\tnotProtected->"+oppNotProtected[MoveNodesSort.kill1]);
-//		System.out.println("kill2->"+values[MoveNodesSort.kill2]+"\tcount->"+MoveNodesSort.killcount2+"\thit->"+Double.valueOf(values[MoveNodesSort.kill2])/MoveNodesSort.killcount2*100+"%"+"\tprotected->"+oppProtected[MoveNodesSort.kill2]+"\tnotProtected->"+oppNotProtected[MoveNodesSort.kill2]);
-//		//System.out.println("firsteat->"+values[MoveNodesSort.firsteat]+"\tcount->"+MoveNodesSort.firsteatcount+"\thit->"+Double.valueOf(values[MoveNodesSort.firsteat])/MoveNodesSort.firsteatcount*100+"%"+"\tprotected->"+oppProtected[MoveNodesSort.firsteat]+"\tnotProtected->"+oppNotProtected[MoveNodesSort.firsteat]);
-//		System.out.println("eat->"+values[MoveNodesSort.eatmove]+"\tcount->"+MoveNodesSort.eatmovecount+"\thit->"+Double.valueOf(values[MoveNodesSort.eatmove])/MoveNodesSort.eatmovecount*100+"%"+"\tprotected->"+oppProtected[MoveNodesSort.eatmove]+"\tnotProtected->"+oppNotProtected[MoveNodesSort.eatmove]);
-//		System.out.println("other->"+values[MoveNodesSort.other]+"\tcount->"+MoveNodesSort.othercount+"\thit->"+Double.valueOf(values[MoveNodesSort.other])/MoveNodesSort.othercount*100+"%"+"\tprotected->"+oppProtected[MoveNodesSort.other]+"\tnotProtected->"+oppNotProtected[MoveNodesSort.other]);
-//		System.out.println("inCheck->"+checkNum);
-
+        //		System.out.println("TRAN1->"+values[MoveNodesSort.TRAN1]+"\tcount->"+MoveNodesSort
+        // .trancount1+"\thit->"+Double.valueOf(values[MoveNodesSort.TRAN1])/MoveNodesSort
+        // .trancount1*100+"%"+"\tprotected->"+oppProtected[MoveNodesSort
+        // .TRAN1]+"\tnotProtected->"+oppNotProtected[MoveNodesSort.TRAN1]);
+        //		System.out.println("tran2->"+values[MoveNodesSort.tran2]+"\tcount->"+MoveNodesSort
+        // .trancount2+"\thit->"+Double.valueOf(values[MoveNodesSort.tran2])/MoveNodesSort
+        // .trancount2*100+"%"+"\tprotected->"+oppProtected[MoveNodesSort
+        // .tran2]+"\tnotProtected->"+oppNotProtected[MoveNodesSort.tran2]);
+        //		System.out.println("kill1->"+values[MoveNodesSort.kill1]+"\tcount->"+MoveNodesSort
+        // .killcount1+"\thit->"+Double.valueOf(values[MoveNodesSort.kill1])/MoveNodesSort
+        // .killcount1*100+"%"+"\tprotected->"+oppProtected[MoveNodesSort
+        // .kill1]+"\tnotProtected->"+oppNotProtected[MoveNodesSort.kill1]);
+        //		System.out.println("kill2->"+values[MoveNodesSort.kill2]+"\tcount->"+MoveNodesSort
+        // .killcount2+"\thit->"+Double.valueOf(values[MoveNodesSort.kill2])/MoveNodesSort
+        // .killcount2*100+"%"+"\tprotected->"+oppProtected[MoveNodesSort
+        // .kill2]+"\tnotProtected->"+oppNotProtected[MoveNodesSort.kill2]);
+        //		//System.out.println("firsteat->"+values[MoveNodesSort.firsteat]+"\tcount->"+MoveNodesSort
+        // .firsteatcount+"\thit->"+Double.valueOf(values[MoveNodesSort.firsteat])/MoveNodesSort
+        // .firsteatcount*100+"%"+"\tprotected->"+oppProtected[MoveNodesSort
+        // .firsteat]+"\tnotProtected->"+oppNotProtected[MoveNodesSort.firsteat]);
+        //		System.out.println("eat->"+values[MoveNodesSort.eatmove]+"\tcount->"+MoveNodesSort
+        // .eatmovecount+"\thit->"+Double.valueOf(values[MoveNodesSort.eatmove])/MoveNodesSort
+        // .eatmovecount*100+"%"+"\tprotected->"+oppProtected[MoveNodesSort
+        // .eatmove]+"\tnotProtected->"+oppNotProtected[MoveNodesSort.eatmove]);
+        //		System.out.println("other->"+values[MoveNodesSort.other]+"\tcount->"+MoveNodesSort
+        // .othercount+"\thit->"+Double.valueOf(values[MoveNodesSort.other])/MoveNodesSort
+        // .othercount*100+"%"+"\tprotected->"+oppProtected[MoveNodesSort
+        // .other]+"\tnotProtected->"+oppNotProtected[MoveNodesSort.other]);
+        //		System.out.println("inCheck->"+checkNum);
 
         return s;
     }
@@ -104,7 +127,7 @@ public class PrincipalVariation extends SearchEngine {
         boolean isMove = false;
         int play = swapPlay(lastLink.play);
 
-//		是否被将军
+        //		是否被将军
         boolean isChecked = chessMove.checked(play);
         //设置前上步是否将军
         lastLink.chk = isChecked;
@@ -145,7 +168,7 @@ public class PrincipalVariation extends SearchEngine {
         }
 
         if (isMove) {
-            if (bestNodeLink != null) lastLink.setNextLink(bestNodeLink);
+            if (bestNodeLink != null) {lastLink.setNextLink(bestNodeLink);}
             return bestValue;
         } else {
             return -(maxScore - lastLink.depth);
@@ -166,7 +189,7 @@ public class PrincipalVariation extends SearchEngine {
             return -(maxScore - lastLink.depth);
         }
         int bestValue = lastLink.depth - maxScore;
-        if (bestValue > beta) return bestValue;
+        if (bestValue > beta) {return bestValue;}
 
         MoveNodeList tranGodMoveNode = new MoveNodeList(2);
         int[] value = new int[1];
@@ -202,7 +225,6 @@ public class PrincipalVariation extends SearchEngine {
             return thisValue;
         }
 
-
         //空着向前(note: 不能两次连续的空裁剪) 并且不能为被将状态 攻击性棋子要>=3
         if (!lastLink.isNullMove && !isChecked && !isPVNode) {
             if (depth >= 2) {
@@ -210,7 +232,8 @@ public class PrincipalVariation extends SearchEngine {
                 int attackChessNum = chessParam.getAttackChessesNum(play);
                 if (attackChessNum > 0) {
                     int val = 0;
-                    NodeLink nodeLinkNULL = new NodeLink(play, true, transTable.boardZobrist32, transTable.boardZobrist64);
+                    NodeLink nodeLinkNULL = new NodeLink(play, true, transTable.boardZobrist32,
+                        transTable.boardZobrist64);
                     nodeLinkNULL.setLastLink(lastLink);
                     val = -negaScout(-beta, -beta + 1, depth - R - 1, nodeLinkNULL, false);
                     if (val >= beta) {
@@ -248,18 +271,20 @@ public class PrincipalVariation extends SearchEngine {
             //走完自己被将军
             if (chessMove.checked(play)) {
                 //历史表对这样的着法要减分，
-//				cHistorySort.setCHistoryBad(moveNode, depth);
+                //				cHistorySort.setCHistoryBad(moveNode, depth);
                 chessMove.unMoveOperate(moveNode);
                 continue;
             }
             newDepth = depth;
-//			if( !isChecked && !isPVNode  && movesSearched>=FutilityMoveCounts[newDepth]){
-//				chessMove.unMoveOperate(moveNode);
-//				movesSearched++;
-//				continue;
-//			}
-//			
-            if (!isChecked && !isPVNode && newDepth < 6 && !isDanger(play) && movesSearched >= movesSearchedCount && FutilityScore[newDepth][movesSearched] + (isPVNode ? (140 * (newDepth * 1.4)) : 0) + this.roughEvaluate(play) < thisAlpha) {
+            //			if( !isChecked && !isPVNode  && movesSearched>=FutilityMoveCounts[newDepth]){
+            //				chessMove.unMoveOperate(moveNode);
+            //				movesSearched++;
+            //				continue;
+            //			}
+            //
+            if (!isChecked && !isPVNode && newDepth < 6 && !isDanger(play) && movesSearched >= movesSearchedCount &&
+                FutilityScore[newDepth][movesSearched] + (isPVNode ? (140 * (newDepth * 1.4)) : 0) + this.roughEvaluate(
+                    play) < thisAlpha) {
                 chessMove.unMoveOperate(moveNode);
                 movesSearched++;
                 continue;
@@ -273,8 +298,11 @@ public class PrincipalVariation extends SearchEngine {
                 if (!isChecked && newDepth >= 3 && movesSearched >= movesSearchedCount) {
 
                     if (movesSearched >= movesSearchedCount && !isDanger(1 - play)) {
-                        if (movesSearched >= (movesSearchedCount + (5 + newDepth)) * 2) kk = 4;
-                        else if (movesSearched >= (movesSearchedCount + 5 + newDepth)) kk = 3;
+                        if (movesSearched >= (movesSearchedCount + (5 + newDepth)) * 2) {kk = 4;} else if (movesSearched
+                            >= (movesSearchedCount + 5 + newDepth)) {
+
+                            kk = 3;
+                        }
                     }
                     thisValue = -negaScout(-thisAlpha - 1, -thisAlpha, newDepth - kk, nodeLinkTemp, false);
                 } else {
@@ -303,7 +331,8 @@ public class PrincipalVariation extends SearchEngine {
                 // 超出下边界
                 if (thisValue >= beta) {
                     //不为空着法
-                    if (!lastLink.isNullMove && moveNodeSort.currType != MoveNodesSort.kill1 && moveNodeSort.currType != MoveNodesSort.kill2) {
+                    if (!lastLink.isNullMove && moveNodeSort.currType != MoveNodesSort.kill1
+                        && moveNodeSort.currType != MoveNodesSort.kill2) {
                         killerMove[depth][1] = killerMove[depth][0];
                         killerMove[depth][0] = moveNode;
                     }

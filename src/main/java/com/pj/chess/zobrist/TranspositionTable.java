@@ -39,7 +39,7 @@ public class TranspositionTable {
 
     public TranspositionTable() {
         this.synchroStaticZobristBoardToThis();
-//		initTranZobrist();
+        //		initTranZobrist();
     }
 
     public static void setDefaultHashSize() {
@@ -89,7 +89,7 @@ public class TranspositionTable {
                 int chess = board[i];
                 boardZobristStatic64 ^= ChessZobristList64[i][chessRoles[chess]];
                 boardZobristStatic32 ^= ChessZobristList32[i][chessRoles[chess]];
-//				System.out.println(boardZobristStatic32+"\t->"+i);
+                //				System.out.println(boardZobristStatic32+"\t->"+i);
             }
         }
     }
@@ -123,7 +123,7 @@ public class TranspositionTable {
                 int chess = board[i];
                 boardZobrist64 ^= ChessZobristList64[i][chessRoles[chess]];
                 boardZobrist32 ^= ChessZobristList32[i][chessRoles[chess]];
-//				System.out.println(boardZobrist32+"\t->"+i);
+                //				System.out.println(boardZobrist32+"\t->"+i);
             }
         }
 
@@ -243,11 +243,16 @@ public class TranspositionTable {
 			String[] alterEntry=new String[]{"","上边界","下边界","精确值"};
 			System.out.println("========================当次要比较数据===========================");
 			for(MoveNode movenode:moveLists){
-				System.out.println("\t\t原位置:"+bitBoardRow[movenode.srcSite]+"行"+bitBoardCol[movenode.srcSite]+"列  原棋子："+chessName[movenode.srcChess] +"\t目标位置："+bitBoardRow[movenode.destSite]+"行  "+bitBoardCol[movenode.destSite] +"列  目标棋子"+chessName[movenode.destChess]);
+				System.out.println("\t\t原位置:"+bitBoardRow[movenode.srcSite]+"行"+bitBoardCol[movenode.srcSite]+"列
+				原棋子："+chessName[movenode.srcChess] +"\t目标位置："+bitBoardRow[movenode.destSite]+"行
+				"+bitBoardCol[movenode.destSite] +"列  目标棋子"+chessName[movenode.destChess]);
 			}
-			System.out.println("========================置换表中数据  ("+alterEntry[hi.entry_type]+")=========================");
+			System.out.println("========================置换表中数据  ("+alterEntry[hi.entry_type]+")
+			=========================");
 			for(MoveNode movenode:hi.moveNodes){
-				System.out.println("\t\t原位置:"+bitBoardRow[movenode.srcSite]+"行"+bitBoardCol[movenode.srcSite]+"列  原棋子："+chessName[movenode.srcChess] +"\t目标位置："+bitBoardRow[movenode.destSite]+"行  "+bitBoardCol[movenode.destSite] +"列  目标棋子"+chessName[movenode.destChess]);
+				System.out.println("\t\t原位置:"+bitBoardRow[movenode.srcSite]+"行"+bitBoardCol[movenode.srcSite]+"列
+				原棋子："+chessName[movenode.srcChess] +"\t目标位置："+bitBoardRow[movenode.destSite]+"行
+				"+bitBoardCol[movenode.destSite] +"列  目标棋子"+chessName[movenode.destChess]);
 			}
 			switch (hi.entry_type) {
 			// 精确值
@@ -272,7 +277,8 @@ public class TranspositionTable {
     /*
      * 使终覆盖策略
      */
-    public boolean setTranZobristOverride(int entry_type, int value, int depth, int play, MoveNode moveNode, int x, HashItem hi0) {
+    public boolean setTranZobristOverride(int entry_type, int value, int depth, int play, MoveNode moveNode, int x,
+                                          HashItem hi0) {
         if (hi0 != null) {
             tranZobrist[play][x][OVERRIDESTRAIGHT] = hi0;
         } else {
@@ -296,7 +302,8 @@ public class TranspositionTable {
     /*
      * 深度覆盖策略
      */
-    public HashItem setTranZobristOverrideByStep(int entry_type, int value, int depth, int play, MoveNode moveNode, int x) {
+    public HashItem setTranZobristOverrideByStep(int entry_type, int value, int depth, int play, MoveNode moveNode,
+                                                 int x) {
         HashItem hi1 = null;
         HashItem hi0 = tranZobrist[play][x][OVERRIDESTEP];
         if (hi0 == null) {
@@ -335,10 +342,10 @@ public class TranspositionTable {
         int x = boardZobrist32 & TRANZOBRISTSIZE;
         HashItem hi0 = this.setTranZobristOverrideByStep(entry_type, value, depth, play, moveNode, x);
         //深度策略中没有被覆盖
-//		if(hi0!=null){
+        //		if(hi0!=null){
         //执行使终覆盖
         this.setTranZobristOverride(entry_type, value, depth, play, moveNode, x, hi0);
-//		}
+        //		}
     }
 
     /*
@@ -382,22 +389,20 @@ public class TranspositionTable {
             // 当是浅层的节点时返回浅层的最佳走法
             return FAIL;
         }
-        switch (hi.entry_type) {
-            // 精确值
-            case hashPV:
-                return value;
+        if (hi.entry_type == hashPV) {
+            return value;
             // 下边界(因为是剪枝的结果所以只要当前置换表中的值大于当前的剪枝条件 (>beta) )
-            case hashBeta:
-                if (value >= beta) {
-                    return value;
-                }
-                break;
+        } else if (hi.entry_type == hashBeta) {
+            if (value >= beta) {
+                return value;
+            }
+
             // 上边界
-            case hashAlpha:
-                if (value <= alpha) {
-                    return value;
-                }
-                break;
+        } else if (hi.entry_type == hashAlpha) {
+            if (value <= alpha) {
+                return value;
+            }
+
         }
         return FAIL;
     }

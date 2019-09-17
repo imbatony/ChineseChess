@@ -7,11 +7,8 @@ import static com.pj.chess.ChessConstant.*;
 import static com.pj.chess.Tools.isBoardTo255;
 
 /**
- * @author pengjiu
- * 棋子棋盘初始化操作
- * 棋子的着法预生成
+ * @author pengjiu 棋子棋盘初始化操作 棋子的着法预生成
  */
-
 
 public class ChessInitialize {
     static {
@@ -94,12 +91,11 @@ public class ChessInitialize {
         this.initChariotGunVariedMove(gunMoreRestAttackCol, 1, 2, true);
 
         //生成置换表
-//		genBoardZobrist();
+        //		genBoardZobrist();
         //生成基础分 和 棋子数量
 
         //预生成所有位棋盘
         preAllBitBoard();
-
 
     }
 
@@ -118,9 +114,9 @@ public class ChessInitialize {
             chessBitBoardRole[i] = new BitBoard();
         }
         ChessParam chessParamCont = new ChessParam(board, chesses, new int[2],
-                new int[10], new int[9], new int[15], new BitBoard(),
-                new BitBoard[]{new BitBoard(), new BitBoard()},
-                chessBitBoardRole);
+            new int[10], new int[9], new int[15], new BitBoard(),
+            new BitBoard[] {new BitBoard(), new BitBoard()},
+            chessBitBoardRole);
         for (int i = 0; i < boardTemp.length; i++) {
             if (boardTemp[i] > 0) {
                 int destSite = i;
@@ -139,27 +135,24 @@ public class ChessInitialize {
         return chessParamCont;
     }
 
-    public static void main(String[] args) {
-    }
-
     private void preAllBitBoard() {
         // 马 考虑别腿所能攻击到的位置
         preBitBoardAttack(knightMove, horseLeg, KnightBitBoardOfAttackLimit, 0);
         // 象 考虑别腿所能攻击到的位置
         preBitBoardAttack(elephantMove, elephantLeg,
-                ElephanBitBoardOfAttackLimit, 1);
+            ElephanBitBoardOfAttackLimit, 1);
         // 车炮不吃子的情况 行
         preGunAndChariotBitBoardAttack(move_chariotGunRowNop,
-                MoveChariotOrGunBitBoardRow, 0);
+            MoveChariotOrGunBitBoardRow, 0);
         // 车炮不吃子的情况 列
         preGunAndChariotBitBoardAttack(move_chariotGunColNop,
-                MoveChariotOrGunBitBoardCol, 1);
+            MoveChariotOrGunBitBoardCol, 1);
         // 车吃子情况 行
         preGunAndChariotBitBoardAttack(chariotMoveRowEat,
-                ChariotBitBoardOfAttackRow, 0);
+            ChariotBitBoardOfAttackRow, 0);
         // 车吃子情况 列
         preGunAndChariotBitBoardAttack(chariotMoveColEat,
-                ChariotBitBoardOfAttackCol, 1);
+            ChariotBitBoardOfAttackCol, 1);
         // 炮吃子情况 行
         preGunAndChariotBitBoardAttack(gunMoveRowEat, GunBitBoardOfAttackRow, 0);
         // 炮吃子情况 列
@@ -181,7 +174,7 @@ public class ChessInitialize {
         // 炮隔多子吃子情况 列
         preGunAndChariotBitBoardAttack(gunMoreRestAttackCol, GunBitBoardOfMoreRestAttackCol, 1);
         //加载开局库
-//		loadBook();
+        //		loadBook();
     }
 
     private void preKingCheckedSoldierBitBoards(BitBoard[] bitBoard) {
@@ -201,8 +194,8 @@ public class ChessInitialize {
      * 初始马的着法预生成数组
      */
     private void initKnightMove() {
-        int[] cnKnightMoveTab = new int[]{-0x21, -0x1f, -0x12, -0x0e, +0x0e, +0x12, +0x1f, +0x21};
-        int[] cnHorseLegTab = new int[]{-0x10, -0x10, -0x01, +0x01, -0x01, +0x01, +0x10, +0x10};
+        int[] cnKnightMoveTab = new int[] {-0x21, -0x1f, -0x12, -0x0e, +0x0e, +0x12, +0x1f, +0x21};
+        int[] cnHorseLegTab = new int[] {-0x10, -0x10, -0x01, +0x01, -0x01, +0x01, +0x10, +0x10};
         for (int site = 0; site < 255; site++) {
             if (isBoardTo255(site)) {
                 int z = 0;
@@ -237,8 +230,8 @@ public class ChessInitialize {
      * 初始象的着法预生成数组
      */
     public void initElephantMove() {
-        int[] cnElephantMoveTab = new int[]{-0x22, -0x1e, +0x1e, +0x22};
-        int[] cnElephantLegTab = new int[]{-0x11, -0xf, +0xf, +0x11};
+        int[] cnElephantMoveTab = new int[] {-0x22, -0x1e, +0x1e, +0x22};
+        int[] cnElephantLegTab = new int[] {-0x11, -0xf, +0xf, +0x11};
         for (int site = 0; site < 255; site++) {
             if (isBoardTo255(site)) {
                 int z = 0;
@@ -246,12 +239,12 @@ public class ChessInitialize {
                 int[] _tElephantLegTab = cnElephantLegTab;
                 //黑象到达楚汉边界重置其着法表不允许地河
                 if (site / 16 == 7 || site / 16 == 6) {
-                    _tElephantMoveTab = new int[]{-0x22, -0x1e};
-                    _tElephantLegTab = new int[]{-0x11, -0xf};
+                    _tElephantMoveTab = new int[] {-0x22, -0x1e};
+                    _tElephantLegTab = new int[] {-0x11, -0xf};
                     //红象到达楚汉边界重置其着法表不允许地河
                 } else if (site / 16 == 8 || site / 16 == 9) {
-                    _tElephantMoveTab = new int[]{+0x1e, +0x22};
-                    _tElephantLegTab = new int[]{+0xf, +0x11};
+                    _tElephantMoveTab = new int[] {+0x1e, +0x22};
+                    _tElephantLegTab = new int[] {+0xf, +0x11};
                 }
                 for (int j = 0; j < _tElephantMoveTab.length; j++) {
 
@@ -284,23 +277,23 @@ public class ChessInitialize {
      */
     private void initSoldier() {
         int[] _tSoldierMoveTab = null;
-        for (int i = 0; i < soldierMove.length; i++)
+        for (int i = 0; i < soldierMove.length; i++) {
             for (int site = 0; site < 255; site++) {
                 if (isBoardTo255(site)) {
                     int z = 0;
                     if (i == BLACKPLAYSIGN) {
                         //黑方兵以经过界
                         if (site / 16 > 7) {
-                            _tSoldierMoveTab = new int[]{+0x10, -0x01, +0x01};
+                            _tSoldierMoveTab = new int[] {+0x10, -0x01, +0x01};
                         } else {
-                            _tSoldierMoveTab = new int[]{+0x10};
+                            _tSoldierMoveTab = new int[] {+0x10};
                         }
                     } else if (i == REDPLAYSIGN) {
                         //红方兵以经过界
                         if (site / 16 < 8) {
-                            _tSoldierMoveTab = new int[]{-0x10, -0x01, +0x01};
+                            _tSoldierMoveTab = new int[] {-0x10, -0x01, +0x01};
                         } else {
-                            _tSoldierMoveTab = new int[]{-0x10};
+                            _tSoldierMoveTab = new int[] {-0x10};
                         }
                     }
                     for (int j = 0; j < _tSoldierMoveTab.length; j++) {
@@ -319,19 +312,21 @@ public class ChessInitialize {
                     }
                 }
             }
+        }
     }
     /*
      * 生成32位64位 唯一随机数
      */
-//	private void genBoardZobrist(){
-//		Random random = new Random();
-//		for(int i=0;i<ChessZobristList64.length;i++){
-//			for(int j=0;j<ChessZobristList64[i].length;j++){
-//					ChessZobristList64[i][j]=Math.abs((random.nextLong()<<15)^(random.nextLong()<<30)^(random.nextLong()<<45)^(random.nextLong()<<60));
-//					ChessZobristList32[i][j]= Math.abs((random.nextInt()<<15)^(random.nextInt()<<30));
-//			}
-//		}
-//	}
+    //	private void genBoardZobrist(){
+    //		Random random = new Random();
+    //		for(int i=0;i<ChessZobristList64.length;i++){
+    //			for(int j=0;j<ChessZobristList64[i].length;j++){
+    //					ChessZobristList64[i][j]=Math.abs((random.nextLong()<<15)^(random.nextLong()<<30)^(random
+    // .nextLong()<<45)^(random.nextLong()<<60));
+    //					ChessZobristList32[i][j]= Math.abs((random.nextInt()<<15)^(random.nextInt()<<30));
+    //			}
+    //		}
+    //	}
 
     /**
      * @param moveEat     数组
@@ -339,8 +334,7 @@ public class ChessInitialize {
      * @param handicapNum 中间间隔棋子数
      * @param isEat       是否吃子 true false
      * @author pengjiu
-     * @date:Sep 23, 2011 1:44:24 PM
-     * 功能：车炮吃子与不吃子
+     * @date:Sep 23, 2011 1:44:24 PM 功能：车炮吃子与不吃子
      */
     private void initChariotGunVariedMove(int[][][] moveEat, int direction, int handicapNum, boolean isEat) {
         int num = moveEat.length - 1;
@@ -429,8 +423,9 @@ public class ChessInitialize {
                 int chessRole = chessRoles[board[allChess[i]]];
                 int play = i < 32 ? BLACKPLAYSIGN : REDPLAYSIGN;
                 chessParamCont.increaseChessesNum(chessRole);
-//				chessParamCont.baseScore[play]+=EvaluateComputeMiddle.chessBaseScore[i];
-//				chessParamCont.baseScore[play]+=new EvaluateComputeMiddle(chessParamCont).chessAttachScore(chessRole,allChess[i]);
+                //				chessParamCont.baseScore[play]+=EvaluateComputeMiddle.chessBaseScore[i];
+                //				chessParamCont.baseScore[play]+=new EvaluateComputeMiddle(chessParamCont)
+                // .chessAttachScore(chessRole,allChess[i]);
                 chessParamCont.maskBoardCheeses.assignXor(MaskChesses[site]);
                 chessParamCont.bitBoards[play].assignXor(MaskChesses[site]);
                 chessParamCont.maskBoardPersonalRoleChesses[chessRole].assignXor(MaskChesses[site]);
@@ -445,8 +440,7 @@ public class ChessInitialize {
      * @param attackBoardBit 最终返回的数据
      * @param type           0 为马  1为象
      * @author pengjiu
-     * @date:Aug 26, 2011 5:09:07 PM
-     * 功能： 生成马 and 象 不别腿所能攻击到的位置
+     * @date:Aug 26, 2011 5:09:07 PM 功能： 生成马 and 象 不别腿所能攻击到的位置
      */
     private void preBitBoardAttack(int[][] attackBoard, int[][] leg, BitBoard[][] attackBoardBit, int type) {
         for (int i = 0; i < ChessConstant.BOARDSIZE90; i++) {
@@ -484,25 +478,33 @@ public class ChessInitialize {
                     }
                 }
                 if (type == 0) { //马
-//					 if(!attackBoardBit[i][siteLegBit.checkSumOfKnight()].isEmpty()){
-//						 System.out.println("==========================马===========================");
-//						 System.out.println(attackBoardBit[i][siteLegBit.checkSumOfKnight()]+" \n  原位置"+i+attackBoardBit[i][siteLegBit.checkSumOfKnight()].checkSumOfKnight()+" 棋子在->"+i);
-//						 System.out.println(siteLegBit+" \n  现在位置"+i+siteLegBit.checkSumOfKnight()+" 棋子在->"+i);
-//						 System.out.println("=====================================================");
-//					 }else {
+                    //					 if(!attackBoardBit[i][siteLegBit.checkSumOfKnight()].isEmpty()){
+                    //						 System.out.println
+                    // ("==========================马===========================");
+                    //						 System.out.println(attackBoardBit[i][siteLegBit.checkSumOfKnight()]+" \n
+                    // 原位置"+i+attackBoardBit[i][siteLegBit.checkSumOfKnight()].checkSumOfKnight()+" 棋子在->"+i);
+                    //						 System.out.println(siteLegBit+" \n  现在位置"+i+siteLegBit.checkSumOfKnight()
+                    // +" 棋子在->"+i);
+                    //						 System.out.println
+                    // ("=====================================================");
+                    //					 }else {
                     attackBoardBit[i][siteLegBit.checkSumOfKnight()] = siteAttBit;
                     //马的机动性
                     KnightMobility[i][siteLegBit.checkSumOfKnight()] = siteAttBit.Count();
-//					 }
+                    //					 }
                 } else {  //象
-//					 if(!attackBoardBit[i][siteLegBit.checkSumOfElephant()].isEmpty()){
-//						 System.out.println("========================象=============================");
-//						 System.out.println(attackBoardBit[i][siteLegBit.checkSumOfElephant()]+" \n  原位置"+i+attackBoardBit[i][siteLegBit.checkSumOfElephant()].checkSumOfElephant()+" 棋子在->"+i);
-//						 System.out.println(siteLegBit+" \n  现在位置"+i+siteLegBit.checkSumOfElephant()+" 棋子在->"+i);
-//						 System.out.println("=====================================================");
-//					 }else {
+                    //					 if(!attackBoardBit[i][siteLegBit.checkSumOfElephant()].isEmpty()){
+                    //						 System.out.println
+                    // ("========================象=============================");
+                    //						 System.out.println(attackBoardBit[i][siteLegBit.checkSumOfElephant()]+"
+                    // \n  原位置"+i+attackBoardBit[i][siteLegBit.checkSumOfElephant()].checkSumOfElephant()+" 棋子在->"+i);
+                    //						 System.out.println(siteLegBit+" \n  现在位置"+i+siteLegBit.checkSumOfElephant
+                    // ()+" 棋子在->"+i);
+                    //						 System.out.println
+                    // ("=====================================================");
+                    //					 }else {
                     attackBoardBit[i][siteLegBit.checkSumOfElephant()] = siteAttBit;
-//					 }
+                    //					 }
                 }
 
             }
@@ -557,11 +559,7 @@ public class ChessInitialize {
     }
 
     /**
-     * @author pengjiu
-     * index : 数组起始位置
-     * a  : 数组
-     * num : 从数组后面拿取几位
-     * 一直拿取到只为0为止
+     * @author pengjiu index : 数组起始位置 a  : 数组 num : 从数组后面拿取几位 一直拿取到只为0为止
      */
     private String[] computCombination(int index, int[] a, int num) {
         String[] value = new String[10];
@@ -583,14 +581,13 @@ public class ChessInitialize {
      * @param moveSite
      * @param mobility
      * @author pengjiu
-     * @date:Sep 1, 2011 12:43:05 PM
-     * 功能： 车炮机动性能预生成
+     * @date:Sep 1, 2011 12:43:05 PM 功能： 车炮机动性能预生成
      */
     private void preGunAndChariotMobility(BitBoard[][] moveSite, int[][] mobility) {
         for (int i = 0; i < moveSite.length; i++) {
             for (int j = 0; j < moveSite[i].length; j++) {
                 if (moveSite[i][j] != null) {
-//					System.out.println(moveSite[i][j].Count());
+                    //					System.out.println(moveSite[i][j].Count());
                     mobility[i][j] = moveSite[i][j].Count();
                 }
 
@@ -639,68 +636,66 @@ public class ChessInitialize {
     /**
      * @param bitBoard
      * @author pengjiu
-     * @date:Aug 29, 2011 12:17:14 PM
-     * 功能： 将的位棋盘生成
+     * @date:Aug 29, 2011 12:17:14 PM 功能： 将的位棋盘生成
      */
     public void preBitBoardKingMove(BitBoard[] bitBoard) {
         for (int i = 0; i < BOARDSIZE90; i++) {
             int[] _tMove = null;
             int srcSite = i;
-            switch (srcSite) {
-                case 3:
-                    _tMove = new int[]{4, 12};
-                    break;
-                case 4:
-                    _tMove = new int[]{3, 13, 5};
-                    break;
-                case 5:
-                    _tMove = new int[]{4, 14};
-                    break;
-                case 12:
-                    _tMove = new int[]{3, 13, 21};
-                    break;
-                case 13:
-                    _tMove = new int[]{12, 4, 14, 22};
-                    break;
-                case 14:
-                    _tMove = new int[]{5, 13, 23};
-                    break;
-                case 21:
-                    _tMove = new int[]{12, 22};
-                    break;
-                case 22:
-                    _tMove = new int[]{21, 13, 23};
-                    break;
-                case 23:
-                    _tMove = new int[]{22, 14};
-                    break;
-                case 84:
-                    _tMove = new int[]{75, 85};
-                    break;
-                case 85:
-                    _tMove = new int[]{84, 76, 86};
-                    break;
-                case 86:
-                    _tMove = new int[]{85, 77};
-                    break;
-                case 75:
-                    _tMove = new int[]{66, 84, 76};
-                    break;
-                case 76:
-                    _tMove = new int[]{85, 75, 77, 67};
-                    break;
-                case 77:
-                    _tMove = new int[]{76, 68, 86};
-                    break;
-                case 66:
-                    _tMove = new int[]{75, 67};
-                    break;
-                case 67:
-                    _tMove = new int[]{66, 76, 68};
-                    break;
-                case 68:
-                    _tMove = new int[]{67, 77};
-                    break;
+            if (srcSite == 3) {
+                _tMove = new int[] {4, 12};
+
+            } else if (srcSite == 4) {
+                _tMove = new int[] {3, 13, 5};
+
+            } else if (srcSite == 5) {
+                _tMove = new int[] {4, 14};
+
+            } else if (srcSite == 12) {
+                _tMove = new int[] {3, 13, 21};
+
+            } else if (srcSite == 13) {
+                _tMove = new int[] {12, 4, 14, 22};
+
+            } else if (srcSite == 14) {
+                _tMove = new int[] {5, 13, 23};
+
+            } else if (srcSite == 21) {
+                _tMove = new int[] {12, 22};
+
+            } else if (srcSite == 22) {
+                _tMove = new int[] {21, 13, 23};
+
+            } else if (srcSite == 23) {
+                _tMove = new int[] {22, 14};
+
+            } else if (srcSite == 84) {
+                _tMove = new int[] {75, 85};
+
+            } else if (srcSite == 85) {
+                _tMove = new int[] {84, 76, 86};
+
+            } else if (srcSite == 86) {
+                _tMove = new int[] {85, 77};
+
+            } else if (srcSite == 75) {
+                _tMove = new int[] {66, 84, 76};
+
+            } else if (srcSite == 76) {
+                _tMove = new int[] {85, 75, 77, 67};
+
+            } else if (srcSite == 77) {
+                _tMove = new int[] {76, 68, 86};
+
+            } else if (srcSite == 66) {
+                _tMove = new int[] {75, 67};
+
+            } else if (srcSite == 67) {
+                _tMove = new int[] {66, 76, 68};
+
+            } else if (srcSite == 68) {
+                _tMove = new int[] {67, 77};
+
             }
             if (_tMove != null) {
                 bitBoard[i] = new BitBoard();
@@ -714,8 +709,7 @@ public class ChessInitialize {
     /**
      * @param bitBoard
      * @author pengjiu
-     * @date:Aug 29, 2011 12:25:50 PM
-     * 功能：士位棋盘
+     * @date:Aug 29, 2011 12:25:50 PM 功能：士位棋盘
      */
     public void preBitBoardGuardMove(BitBoard[] bitBoard) {
         for (int i = 0; i < bitBoard.length; i++) {
@@ -723,34 +717,34 @@ public class ChessInitialize {
             int srcSite = i;
             switch (srcSite) {
                 case 3:
-                    _tMove = new int[]{13};
+                    _tMove = new int[] {13};
                     break;
                 case 5:
-                    _tMove = new int[]{13};
+                    _tMove = new int[] {13};
                     break;
                 case 13:
-                    _tMove = new int[]{3, 5, 21, 23};
+                    _tMove = new int[] {3, 5, 21, 23};
                     break;
                 case 21:
-                    _tMove = new int[]{13};
+                    _tMove = new int[] {13};
                     break;
                 case 23:
-                    _tMove = new int[]{13};
+                    _tMove = new int[] {13};
                     break;
                 case 84:
-                    _tMove = new int[]{76};
+                    _tMove = new int[] {76};
                     break;
                 case 86:
-                    _tMove = new int[]{76};
+                    _tMove = new int[] {76};
                     break;
                 case 76:
-                    _tMove = new int[]{66, 68, 84, 86};
+                    _tMove = new int[] {66, 68, 84, 86};
                     break;
                 case 66:
-                    _tMove = new int[]{76};
+                    _tMove = new int[] {76};
                     break;
                 case 68:
-                    _tMove = new int[]{76};
+                    _tMove = new int[] {76};
                     break;
             }
             if (_tMove != null) {

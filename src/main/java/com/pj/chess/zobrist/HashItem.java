@@ -18,9 +18,9 @@ public class HashItem {
 
     //	public boolean isCheckMate=false;
     //是否为开局库中的数据
-//	public boolean isFEN=false;
-//	public short moveNum=0;
-//	public int play;
+    //	public boolean isFEN=false;
+    //	public short moveNum=0;
+    //	public int play;
     public HashItem() {
     }
 

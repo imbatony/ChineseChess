@@ -14,27 +14,26 @@ import static com.pj.chess.ChessConstant.*;
  */
 public abstract class ChessMoveAbs {
 
-
-    private static int[][] knights = new int[][]{{35, 36}, {19, 20}};
+    private static int[][] knights = new int[][] {{35, 36}, {19, 20}};
     //note:[play][象士将]
-    private static int[][] checkMateFristUseMove = new int[][]{
-            {23, 24, 25, 26, 16},
-            {39, 40, 41, 42, 32}};
+    private static int[][] checkMateFristUseMove = new int[][] {
+        {23, 24, 25, 26, 16},
+        {39, 40, 41, 42, 32}};
     //note:[play][车马炮卒]
-    private static int[][] checkMateSecondlyUseMove = new int[][]{
-            {17, 18, 19, 20, 21, 22, 27, 28, 29, 30, 31},
-            {33, 34, 35, 36, 37, 38, 43, 44, 45, 46, 47}};
+    private static int[][] checkMateSecondlyUseMove = new int[][] {
+        {17, 18, 19, 20, 21, 22, 27, 28, 29, 30, 31},
+        {33, 34, 35, 36, 37, 38, 43, 44, 45, 46, 47}};
     //	public int[]  board;
-//	public int[] allChess;
-//	public int[] chessParam.boardBitRow;
-//	public int[] chessParam.boardBitCol;
+    //	public int[] allChess;
+    //	public int[] chessParam.boardBitRow;
+    //	public int[] chessParam.boardBitCol;
     public int tranHit, killerHit;
     protected MoveNodeList generalMoveList;
     protected MoveNodeList goodMoveList;
     protected MoveNodeList repeatMoveList;
     protected BitBoard oppAttackSite;
     //	public int play;
-//	boolean isEatKing=false;
+    //	boolean isEatKing=false;
     protected ChessParam chessParam;
     protected TranspositionTable tranTable;
     protected int[] board;
@@ -107,26 +106,25 @@ public abstract class ChessMoveAbs {
         setChess(srcChess, destSite);
         setChess(destChess, NOTHING);
 
-
         int srcRow = boardRow[srcSite];
         int srcCol = boardCol[srcSite];
         int destRow = boardRow[destSite];
         int destCol = boardCol[destSite];
-//		System.out.println("原位置:第"+srcRow+"行"+srcCol+"列");
-//		System.out.println("目标位置:第"+destRow+"行"+destCol+"列");
-//		System.out.println("修改之前row关系\t"+Integer.toBinaryString(boardBitRow[destRow]));
+        //		System.out.println("原位置:第"+srcRow+"行"+srcCol+"列");
+        //		System.out.println("目标位置:第"+destRow+"行"+destCol+"列");
+        //		System.out.println("修改之前row关系\t"+Integer.toBinaryString(boardBitRow[destRow]));
         chessParam.boardBitRow[destRow] |= (1 << (8 - destCol));
-//		System.out.println("修改之后row关系\t"+Integer.toBinaryString(chessParam.boardBitRow[destRow]));
+        //		System.out.println("修改之后row关系\t"+Integer.toBinaryString(chessParam.boardBitRow[destRow]));
         chessParam.boardBitCol[destCol] |= (1 << (9 - destRow));
 
-//		System.out.println("修改之前row关系\t"+Integer.toBinaryString(chessParam.boardBitRow[srcRow]));
+        //		System.out.println("修改之前row关系\t"+Integer.toBinaryString(chessParam.boardBitRow[srcRow]));
         chessParam.boardBitRow[srcRow] ^= (1 << (8 - srcCol));
-//		System.out.println("修改之后row关系\t"+Integer.toBinaryString(chessParam.boardBitRow[srcRow]));
+        //		System.out.println("修改之后row关系\t"+Integer.toBinaryString(chessParam.boardBitRow[srcRow]));
         chessParam.boardBitCol[srcCol] ^= (1 << (9 - srcRow));
 
-//		System.out.println("移动棋子前Zobrist："+TranspositionTable.boardZobrist);
+        //		System.out.println("移动棋子前Zobrist："+TranspositionTable.boardZobrist);
         tranTable.moveOperate(moveNode);
-//		System.out.println("移动棋子后Zobrist："+TranspositionTable.boardZobrist);
+        //		System.out.println("移动棋子后Zobrist："+TranspositionTable.boardZobrist);
 
     }
 
@@ -182,7 +180,6 @@ public abstract class ChessMoveAbs {
             chessParam.maskBoardCheeses.assignXor(MaskChesses[srcSite]);
         }
 
-
         int srcRow = boardRow[srcSite];
         int srcCol = boardCol[srcSite];
         int destRow = boardRow[destSite];
@@ -197,10 +194,9 @@ public abstract class ChessMoveAbs {
             chessParam.boardBitRow[srcRow] |= (1 << (8 - srcCol));
             chessParam.boardBitCol[srcCol] |= (1 << (9 - srcRow));
         }
-//		System.out.println("还原棋子前Zobrist："+TranspositionTable.boardZobrist);
+        //		System.out.println("还原棋子前Zobrist："+TranspositionTable.boardZobrist);
         tranTable.unMoveOperate(moveNode);
-//		System.out.println("还原棋子后Zobrist："+TranspositionTable.boardZobrist);
-
+        //		System.out.println("还原棋子后Zobrist："+TranspositionTable.boardZobrist);
 
     }
 
@@ -221,12 +217,10 @@ public abstract class ChessMoveAbs {
      * @param moveNode
      * @return
      * @author pengjiu
-     * @date:Aug 31, 2011 2:34:27 PM
-     * 功能：着法合理性判断
+     * @date:Aug 31, 2011 2:34:27 PM 功能：着法合理性判断
      */
     public boolean legalMove(int play, MoveNode moveNode) {
-        if (moveNode == null)
-            return false;
+        if (moveNode == null) {return false;}
         int srcChess = chessParam.board[moveNode.srcSite];
         int destChess = chessParam.board[moveNode.destSite];
         //原棋子不为已方棋子或目标棋子为已方棋子
@@ -249,9 +243,11 @@ public abstract class ChessMoveAbs {
                 int col = chessParam.boardBitCol[boardCol[srcSite]];
                 if (destChess != NOTHING) { //是吃子走法
                     //取出行列能攻击到的位置
-                    bitBoard = BitBoard.assignXorToNew(ChariotBitBoardOfAttackRow[srcSite][row], ChariotBitBoardOfAttackCol[srcSite][col]);
+                    bitBoard = BitBoard.assignXorToNew(ChariotBitBoardOfAttackRow[srcSite][row],
+                        ChariotBitBoardOfAttackCol[srcSite][col]);
                 } else {
-                    bitBoard = BitBoard.assignXorToNew(MoveChariotOrGunBitBoardRow[srcSite][row], MoveChariotOrGunBitBoardCol[srcSite][col]);
+                    bitBoard = BitBoard.assignXorToNew(MoveChariotOrGunBitBoardRow[srcSite][row],
+                        MoveChariotOrGunBitBoardCol[srcSite][col]);
                 }
                 break;
             case REDKNIGHT:
@@ -266,9 +262,11 @@ public abstract class ChessMoveAbs {
                 col = chessParam.boardBitCol[boardCol[srcSite]];
                 //取出行列能攻击到的位置
                 if (destChess != NOTHING) { //是吃子走法
-                    bitBoard = BitBoard.assignXorToNew(GunBitBoardOfAttackRow[srcSite][row], GunBitBoardOfAttackCol[srcSite][col]);
+                    bitBoard = BitBoard.assignXorToNew(GunBitBoardOfAttackRow[srcSite][row],
+                        GunBitBoardOfAttackCol[srcSite][col]);
                 } else {
-                    bitBoard = BitBoard.assignXorToNew(MoveChariotOrGunBitBoardRow[srcSite][row], MoveChariotOrGunBitBoardCol[srcSite][col]);
+                    bitBoard = BitBoard.assignXorToNew(MoveChariotOrGunBitBoardRow[srcSite][row],
+                        MoveChariotOrGunBitBoardCol[srcSite][col]);
                 }
                 break;
             case REDELEPHANT:
@@ -302,8 +300,7 @@ public abstract class ChessMoveAbs {
      * @param play
      * @return
      * @author pengjiu
-     * @date:Aug 31, 2011 5:36:05 PM
-     * 功能： 将军判断
+     * @date:Aug 31, 2011 5:36:05 PM 功能： 将军判断
      */
     public boolean checked(int play) {
         int opponentPlay = 1 - play;
@@ -317,18 +314,21 @@ public abstract class ChessMoveAbs {
         int col = chessParam.boardBitCol[boardCol[kingSite]];
 
         //车将军
-        BitBoard bitBoard = BitBoard.assignXorToNew(ChariotBitBoardOfAttackRow[kingSite][row], ChariotBitBoardOfAttackCol[kingSite][col]);
+        BitBoard bitBoard = BitBoard.assignXorToNew(ChariotBitBoardOfAttackRow[kingSite][row],
+            ChariotBitBoardOfAttackCol[kingSite][col]);
         bitBoard.assignAnd(chessParam.getBitBoardByPlayRole(opponentPlay, ChessConstant.CHARIOT));
         if (!bitBoard.isEmpty()) {
             return true;
         }
         //将对脸
-        if (!BitBoard.assignAndToNew(ChariotBitBoardOfAttackCol[kingSite][col], MaskChesses[chessParam.allChess[chessPlay[1 - play]]]).isEmpty()) {
+        if (!BitBoard.assignAndToNew(ChariotBitBoardOfAttackCol[kingSite][col],
+            MaskChesses[chessParam.allChess[chessPlay[1 - play]]]).isEmpty()) {
             return true;
         }
 
         //炮将军
-        bitBoard = BitBoard.assignXorToNew(GunBitBoardOfAttackRow[kingSite][row], GunBitBoardOfAttackCol[kingSite][col]);
+        bitBoard = BitBoard.assignXorToNew(GunBitBoardOfAttackRow[kingSite][row],
+            GunBitBoardOfAttackCol[kingSite][col]);
         bitBoard.assignAnd(chessParam.getBitBoardByPlayRole(opponentPlay, ChessConstant.GUN));
         if (!bitBoard.isEmpty()) {
             return true;
@@ -339,26 +339,32 @@ public abstract class ChessMoveAbs {
         int opponentKnight1 = knights[play][0], opponentKnight2 = knights[play][1];
         int knight1Site = chessParam.allChess[opponentKnight1], knight2Site = chessParam.allChess[opponentKnight2];
         //不考虑别腿看是否能将军
-        if (!BitBoard.assignAndToNew(chessParam.getBitBoardByPlayRole(opponentPlay, ChessConstant.KNIGHT), bitBoard).isEmpty()) {
+        if (!BitBoard.assignAndToNew(chessParam.getBitBoardByPlayRole(opponentPlay, ChessConstant.KNIGHT), bitBoard)
+            .isEmpty()) {
             //马1
             if (knight1Site != NOTHING && !BitBoard.assignAndToNew(MaskChesses[knight1Site], bitBoard).isEmpty()) {
-                BitBoard legBoard = BitBoard.assignAndToNew(KnightLegBitBoards[knight1Site], chessParam.maskBoardCheeses);
+                BitBoard legBoard = BitBoard.assignAndToNew(KnightLegBitBoards[knight1Site],
+                    chessParam.maskBoardCheeses);
                 //看马1能攻击到的位置是否有将
-                if (!BitBoard.assignAndToNew(KnightBitBoardOfAttackLimit[knight1Site][legBoard.checkSumOfKnight()], MaskChesses[kingSite]).isEmpty()) {
+                if (!BitBoard.assignAndToNew(KnightBitBoardOfAttackLimit[knight1Site][legBoard.checkSumOfKnight()],
+                    MaskChesses[kingSite]).isEmpty()) {
                     return true;
                 }
             }
             //马2
             if (knight2Site != NOTHING && !BitBoard.assignAndToNew(MaskChesses[knight2Site], bitBoard).isEmpty()) {
-                BitBoard legBoard = BitBoard.assignAndToNew(KnightLegBitBoards[knight2Site], chessParam.maskBoardCheeses);
+                BitBoard legBoard = BitBoard.assignAndToNew(KnightLegBitBoards[knight2Site],
+                    chessParam.maskBoardCheeses);
                 //看马1能攻击到的位置是否有将
-                if (!BitBoard.assignAndToNew(KnightBitBoardOfAttackLimit[knight2Site][legBoard.checkSumOfKnight()], MaskChesses[kingSite]).isEmpty()) {
+                if (!BitBoard.assignAndToNew(KnightBitBoardOfAttackLimit[knight2Site][legBoard.checkSumOfKnight()],
+                    MaskChesses[kingSite]).isEmpty()) {
                     return true;
                 }
             }
         }
         //兵将军的判断
-        return !BitBoard.assignAndToNew(KingCheckedSoldierBitBoards[kingSite], chessParam.getBitBoardByPlayRole(opponentPlay, ChessConstant.SOLDIER)).isEmpty();
+        return !BitBoard.assignAndToNew(KingCheckedSoldierBitBoards[kingSite],
+            chessParam.getBitBoardByPlayRole(opponentPlay, ChessConstant.SOLDIER)).isEmpty();
 
     }
 
@@ -366,8 +372,7 @@ public abstract class ChessMoveAbs {
      * @param play
      * @return
      * @author pengjiu
-     * @date:Sep 20, 2011 2:13:54 PM
-     * 功能： 被几个棋子将军
+     * @date:Sep 20, 2011 2:13:54 PM 功能： 被几个棋子将军
      */
     public int chkNum(int play) {
         int opponentPlay = 1 - play;
@@ -382,14 +387,16 @@ public abstract class ChessMoveAbs {
         int col = chessParam.boardBitCol[boardCol[kingSite]];
 
         //车将军
-        BitBoard bitBoard = BitBoard.assignXorToNew(ChariotBitBoardOfAttackRow[kingSite][row], ChariotBitBoardOfAttackCol[kingSite][col]);
+        BitBoard bitBoard = BitBoard.assignXorToNew(ChariotBitBoardOfAttackRow[kingSite][row],
+            ChariotBitBoardOfAttackCol[kingSite][col]);
         bitBoard.assignAnd(chessParam.getBitBoardByPlayRole(opponentPlay, ChessConstant.CHARIOT));
         if (!bitBoard.isEmpty()) {
             chkNum++;
         }
 
         //炮将军
-        bitBoard = BitBoard.assignXorToNew(GunBitBoardOfAttackRow[kingSite][row], GunBitBoardOfAttackCol[kingSite][col]);
+        bitBoard = BitBoard.assignXorToNew(GunBitBoardOfAttackRow[kingSite][row],
+            GunBitBoardOfAttackCol[kingSite][col]);
         bitBoard.assignAnd(chessParam.getBitBoardByPlayRole(opponentPlay, ChessConstant.GUN));
         if (!bitBoard.isEmpty()) {
             chkNum++;
@@ -400,32 +407,39 @@ public abstract class ChessMoveAbs {
         int opponentKnight1 = knights[play][0], opponentKnight2 = knights[play][1];
         int knight1Site = chessParam.allChess[opponentKnight1], knight2Site = chessParam.allChess[opponentKnight2];
         //不考虑别腿看是否能将军
-        if (!BitBoard.assignAndToNew(chessParam.getBitBoardByPlayRole(opponentPlay, ChessConstant.KNIGHT), bitBoard).isEmpty()) {
+        if (!BitBoard.assignAndToNew(chessParam.getBitBoardByPlayRole(opponentPlay, ChessConstant.KNIGHT), bitBoard)
+            .isEmpty()) {
             //马1
             if (knight1Site != NOTHING && !BitBoard.assignAndToNew(MaskChesses[knight1Site], bitBoard).isEmpty()) {
-                BitBoard legBoard = BitBoard.assignAndToNew(KnightLegBitBoards[knight1Site], chessParam.maskBoardCheeses);
+                BitBoard legBoard = BitBoard.assignAndToNew(KnightLegBitBoards[knight1Site],
+                    chessParam.maskBoardCheeses);
                 //看马1能攻击到的位置是否有将
-                if (!BitBoard.assignAndToNew(KnightBitBoardOfAttackLimit[knight1Site][legBoard.checkSumOfKnight()], MaskChesses[kingSite]).isEmpty()) {
+                if (!BitBoard.assignAndToNew(KnightBitBoardOfAttackLimit[knight1Site][legBoard.checkSumOfKnight()],
+                    MaskChesses[kingSite]).isEmpty()) {
                     chkNum++;
                 }
             }
             //马2
             if (knight2Site != NOTHING && !BitBoard.assignAndToNew(MaskChesses[knight2Site], bitBoard).isEmpty()) {
-                BitBoard legBoard = BitBoard.assignAndToNew(KnightLegBitBoards[knight2Site], chessParam.maskBoardCheeses);
+                BitBoard legBoard = BitBoard.assignAndToNew(KnightLegBitBoards[knight2Site],
+                    chessParam.maskBoardCheeses);
                 //看马1能攻击到的位置是否有将
-                if (!BitBoard.assignAndToNew(KnightBitBoardOfAttackLimit[knight2Site][legBoard.checkSumOfKnight()], MaskChesses[kingSite]).isEmpty()) {
+                if (!BitBoard.assignAndToNew(KnightBitBoardOfAttackLimit[knight2Site][legBoard.checkSumOfKnight()],
+                    MaskChesses[kingSite]).isEmpty()) {
                     chkNum++;
                 }
             }
         }
         //兵将军的判断
-        if (!BitBoard.assignAndToNew(KingCheckedSoldierBitBoards[kingSite], chessParam.getBitBoardByPlayRole(opponentPlay, ChessConstant.SOLDIER)).isEmpty()) {
+        if (!BitBoard.assignAndToNew(KingCheckedSoldierBitBoards[kingSite],
+            chessParam.getBitBoardByPlayRole(opponentPlay, ChessConstant.SOLDIER)).isEmpty()) {
             chkNum++;
         }
         return chkNum;
     }
 
-    public void setMoveNodeList(MoveNodeList generalMoveList, MoveNodeList goodMoveList, MoveNodeList repeatMoveList, BitBoard oppAttackSite) {
+    public void setMoveNodeList(MoveNodeList generalMoveList, MoveNodeList goodMoveList, MoveNodeList repeatMoveList,
+                                BitBoard oppAttackSite) {
         this.generalMoveList = generalMoveList;
         this.goodMoveList = goodMoveList;
         this.repeatMoveList = repeatMoveList;
@@ -443,8 +457,7 @@ public abstract class ChessMoveAbs {
     /**
      * @param play
      * @author pengjiu
-     * @date:Aug 31, 2011 11:01:45 AM
-     * 功能：生成所有吃子着法 note：(但所吃子的价值低于一定值时将不算为吃子着法中)
+     * @date:Aug 31, 2011 11:01:45 AM 功能：生成所有吃子着法 note：(但所吃子的价值低于一定值时将不算为吃子着法中)
      */
     public void genEatMoveList(int play) {
         int begin = chessPlay[play];
@@ -459,10 +472,9 @@ public abstract class ChessMoveAbs {
     }
 
     /**
-     * @param play         玩家
+     * @param play 玩家
      * @author pengjiu
-     * @date:Aug 31, 2011 11:01:19 AM
-     * 功能：生成不吃子着法列表
+     * @date:Aug 31, 2011 11:01:19 AM 功能：生成不吃子着法列表
      */
     public void genNopMoveList(int play) {
         int begin = chessPlay[play];
@@ -475,7 +487,6 @@ public abstract class ChessMoveAbs {
         }
         this.chessNopMove(chessRoles[begin], allChess[begin], play);
     }
-
 
     /**
      * 对手所有能攻击的位置
@@ -503,8 +514,10 @@ public abstract class ChessMoveAbs {
                 int row = chessParam.boardBitRow[boardRow[srcSite]];
                 int col = chessParam.boardBitCol[boardCol[srcSite]];
                 //取出行列能攻击到的位置
-                bitBoard = BitBoard.assignXorToNew(ChariotBitBoardOfAttackRow[srcSite][row], ChariotBitBoardOfAttackCol[srcSite][col]);
-                bitBoard.assignXor(BitBoard.assignXorToNew(MoveChariotOrGunBitBoardRow[srcSite][row], MoveChariotOrGunBitBoardCol[srcSite][col]));
+                bitBoard = BitBoard.assignXorToNew(ChariotBitBoardOfAttackRow[srcSite][row],
+                    ChariotBitBoardOfAttackCol[srcSite][col]);
+                bitBoard.assignXor(BitBoard.assignXorToNew(MoveChariotOrGunBitBoardRow[srcSite][row],
+                    MoveChariotOrGunBitBoardCol[srcSite][col]));
                 break;
             case REDKNIGHT:
             case BLACKKNIGHT:
@@ -517,11 +530,14 @@ public abstract class ChessMoveAbs {
                 row = chessParam.boardBitRow[boardRow[srcSite]];
                 col = chessParam.boardBitCol[boardCol[srcSite]];
                 //取出行列能攻击到的位置
-                bitBoard = BitBoard.assignXorToNew(GunBitBoardOfAttackRow[srcSite][row], GunBitBoardOfAttackCol[srcSite][col]);
+                bitBoard = BitBoard.assignXorToNew(GunBitBoardOfAttackRow[srcSite][row],
+                    GunBitBoardOfAttackCol[srcSite][col]);
                 //能走到的位置
-//			bitBoard=BitBoard.assignXorToNew(MoveChariotOrGunBitBoardRow[srcSite][row], MoveChariotOrGunBitBoardCol[srcSite][col]);
+                //			bitBoard=BitBoard.assignXorToNew(MoveChariotOrGunBitBoardRow[srcSite][row],
+                // MoveChariotOrGunBitBoardCol[srcSite][col]);
                 //炮伪攻击位置
-                bitBoard.assignXor(BitBoard.assignXorToNew(GunBitBoardOfFakeAttackRow[srcSite][row], GunBitBoardOfFakeAttackCol[srcSite][col]));
+                bitBoard.assignXor(BitBoard.assignXorToNew(GunBitBoardOfFakeAttackRow[srcSite][row],
+                    GunBitBoardOfFakeAttackCol[srcSite][col]));
                 break;
             case REDELEPHANT:
             case BLACKELEPHANT:
@@ -557,7 +573,8 @@ public abstract class ChessMoveAbs {
                 int col = chessParam.boardBitCol[boardCol[srcSite]];
 
                 //取出行列能攻击到的位置
-                bitBoard = BitBoard.assignXorToNew(ChariotBitBoardOfAttackRow[srcSite][row], ChariotBitBoardOfAttackCol[srcSite][col]);
+                bitBoard = BitBoard.assignXorToNew(ChariotBitBoardOfAttackRow[srcSite][row],
+                    ChariotBitBoardOfAttackCol[srcSite][col]);
                 //取出攻击到的对方棋子
                 bitBoard.assignAnd(chessParam.bitBoards[1 - play]);
                 break;
@@ -566,17 +583,18 @@ public abstract class ChessMoveAbs {
                 //取出被别马腿的位置
                 BitBoard legBoard = BitBoard.assignAndToNew(KnightLegBitBoards[srcSite], chessParam.maskBoardCheeses);
                 //取出能攻击到对方棋子位置
-                bitBoard = BitBoard.assignAndToNew(KnightBitBoardOfAttackLimit[srcSite][legBoard.checkSumOfKnight()], chessParam.bitBoards[1 - play]);
+                bitBoard = BitBoard.assignAndToNew(KnightBitBoardOfAttackLimit[srcSite][legBoard.checkSumOfKnight()],
+                    chessParam.bitBoards[1 - play]);
                 break;
             case REDGUN:
             case BLACKGUN:
                 row = chessParam.boardBitRow[boardRow[srcSite]];
                 col = chessParam.boardBitCol[boardCol[srcSite]];
                 //取出行列能攻击到的位置
-                bitBoard = BitBoard.assignXorToNew(GunBitBoardOfAttackRow[srcSite][row], GunBitBoardOfAttackCol[srcSite][col]);
+                bitBoard = BitBoard.assignXorToNew(GunBitBoardOfAttackRow[srcSite][row],
+                    GunBitBoardOfAttackCol[srcSite][col]);
                 //取出攻击到的对方棋子
                 bitBoard.assignAnd(chessParam.bitBoards[1 - play]);
-
 
                 break;
             case REDELEPHANT:
@@ -584,7 +602,8 @@ public abstract class ChessMoveAbs {
                 //取出被塞象眼的位置
                 legBoard = BitBoard.assignAndToNew(ElephanLegBitBoards[srcSite], chessParam.maskBoardCheeses);
                 //取出能攻击到对方棋子位置
-                bitBoard = BitBoard.assignAndToNew(ElephanBitBoardOfAttackLimit[srcSite][legBoard.checkSumOfElephant()], chessParam.bitBoards[1 - play]);
+                bitBoard = BitBoard.assignAndToNew(ElephanBitBoardOfAttackLimit[srcSite][legBoard.checkSumOfElephant()],
+                    chessParam.bitBoards[1 - play]);
                 break;
             case REDKING:
             case BLACKKING:
@@ -618,7 +637,8 @@ public abstract class ChessMoveAbs {
                 int row = chessParam.boardBitRow[boardRow[srcSite]];
                 int col = chessParam.boardBitCol[boardCol[srcSite]];
                 //取出行列能走到的位置
-                bitBoard = BitBoard.assignXorToNew(MoveChariotOrGunBitBoardRow[srcSite][row], MoveChariotOrGunBitBoardCol[srcSite][col]);
+                bitBoard = BitBoard.assignXorToNew(MoveChariotOrGunBitBoardRow[srcSite][row],
+                    MoveChariotOrGunBitBoardCol[srcSite][col]);
                 break;
             case REDKNIGHT:
             case BLACKKNIGHT:
@@ -635,7 +655,8 @@ public abstract class ChessMoveAbs {
             case BLACKGUN:
                 row = chessParam.boardBitRow[boardRow[srcSite]];
                 col = chessParam.boardBitCol[boardCol[srcSite]];
-                bitBoard = BitBoard.assignXorToNew(MoveChariotOrGunBitBoardRow[srcSite][row], MoveChariotOrGunBitBoardCol[srcSite][col]);
+                bitBoard = BitBoard.assignXorToNew(MoveChariotOrGunBitBoardRow[srcSite][row],
+                    MoveChariotOrGunBitBoardCol[srcSite][col]);
                 break;
             case REDELEPHANT:
             case BLACKELEPHANT:
@@ -685,8 +706,7 @@ public abstract class ChessMoveAbs {
      * @param destChess
      * @param play
      * @author pengjiu
-     * @date:Aug 10, 2011 12:40:22 PM
-     * 功能：检测攻击的棋子是否为对手棋子
+     * @date:Aug 10, 2011 12:40:22 PM 功能：检测攻击的棋子是否为对手棋子
      */
     public boolean isOpponentCheck(int destChess, int play) {
         //无棋子返回

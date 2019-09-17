@@ -18,38 +18,39 @@ import java.util.List;
 import static com.pj.chess.ChessConstant.*;
 
 public abstract class SearchEngine implements Runnable {
-    public static final int[] chessStretchNum = new int[]{
-            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-            0, 3, 3, 2, 2, 2, 2, 2, 2, 2, 2, 1, 1, 1, 1, 1,
-            0, 3, 3, 2, 2, 2, 2, 2, 2, 2, 2, 1, 1, 1, 1, 1,
+    public static final int[] chessStretchNum = new int[] {
+        0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+        0, 3, 3, 2, 2, 2, 2, 2, 2, 2, 2, 1, 1, 1, 1, 1,
+        0, 3, 3, 2, 2, 2, 2, 2, 2, 2, 2, 1, 1, 1, 1, 1,
     };
-    private static final int[] blackDangerMarginArray = new int[]{
-            1, 1, 1, 1, 1, 1, 1, 1, 1
-            , 1, 1, 1, 1, 1, 1, 1, 1, 1
-            , 1, 1, 1, 1, 1, 1, 1, 1, 1
-            , 0, 0, 0, 1, 1, 1, 0, 0, 0
-            , 0, 0, 0, 0, 0, 0, 0, 0, 0
+    private static final int[] blackDangerMarginArray = new int[] {
+        1, 1, 1, 1, 1, 1, 1, 1, 1
+        , 1, 1, 1, 1, 1, 1, 1, 1, 1
+        , 1, 1, 1, 1, 1, 1, 1, 1, 1
+        , 0, 0, 0, 1, 1, 1, 0, 0, 0
+        , 0, 0, 0, 0, 0, 0, 0, 0, 0
 
-            , 0, 0, 0, 0, 0, 0, 0, 0, 0
-            , 0, 0, 0, 0, 0, 0, 0, 0, 0
-            , 0, 0, 0, 0, 0, 0, 0, 0, 0
-            , 0, 0, 0, 0, 0, 0, 0, 0, 0
-            , 0, 0, 0, 0, 0, 0, 0, 0, 0
+        , 0, 0, 0, 0, 0, 0, 0, 0, 0
+        , 0, 0, 0, 0, 0, 0, 0, 0, 0
+        , 0, 0, 0, 0, 0, 0, 0, 0, 0
+        , 0, 0, 0, 0, 0, 0, 0, 0, 0
+        , 0, 0, 0, 0, 0, 0, 0, 0, 0
     };
-    private static final int[] redDangerMarginArray = new int[]{
-            0, 0, 0, 0, 0, 0, 0, 0, 0
-            , 0, 0, 0, 0, 0, 0, 0, 0, 0
-            , 0, 0, 0, 0, 0, 0, 0, 0, 0
-            , 0, 0, 0, 0, 0, 0, 0, 0, 0
-            , 0, 0, 0, 0, 0, 0, 0, 0, 0
+    private static final int[] redDangerMarginArray = new int[] {
+        0, 0, 0, 0, 0, 0, 0, 0, 0
+        , 0, 0, 0, 0, 0, 0, 0, 0, 0
+        , 0, 0, 0, 0, 0, 0, 0, 0, 0
+        , 0, 0, 0, 0, 0, 0, 0, 0, 0
+        , 0, 0, 0, 0, 0, 0, 0, 0, 0
 
-            , 0, 0, 0, 0, 0, 0, 0, 0, 0
-            , 0, 0, 0, 1, 1, 1, 0, 0, 0
-            , 1, 1, 1, 1, 1, 1, 1, 1, 1
-            , 1, 1, 1, 1, 1, 1, 1, 1, 1
-            , 1, 1, 1, 1, 1, 1, 1, 1, 1
+        , 0, 0, 0, 0, 0, 0, 0, 0, 0
+        , 0, 0, 0, 1, 1, 1, 0, 0, 0
+        , 1, 1, 1, 1, 1, 1, 1, 1, 1
+        , 1, 1, 1, 1, 1, 1, 1, 1, 1
+        , 1, 1, 1, 1, 1, 1, 1, 1, 1
     };
-    private static final BitBoard[] DangerMarginBit = new BitBoard[]{new BitBoard(blackDangerMarginArray), new BitBoard(redDangerMarginArray)};
+    private static final BitBoard[] DangerMarginBit = new BitBoard[] {new BitBoard(blackDangerMarginArray),
+        new BitBoard(redDangerMarginArray)};
     public volatile boolean isStop = false;
     public int stopDepth = 0;
     public int countDepth = MAXDEPTH;
@@ -68,7 +69,8 @@ public abstract class SearchEngine implements Runnable {
     //      将军延伸的权值
     int R = 0, CheckedStretch = 14;
 
-    public SearchEngine(ChessParam chessParam, EvaluateCompute evaluate, TranspositionTable transTable, NodeLink moveHistory) {
+    public SearchEngine(ChessParam chessParam, EvaluateCompute evaluate, TranspositionTable transTable,
+                        NodeLink moveHistory) {
         this.transTable = transTable;
         this.chessParam = chessParam;
         chessMove = new ChessMovePlay(chessParam, transTable, evaluate);
@@ -147,13 +149,12 @@ public abstract class SearchEngine implements Runnable {
         if (nodeLink == null) {
             return 0;
         }
-//		StringBuilder sb=new StringBuilder();
-//		NodeLink firstLink = nodeLink;
-//		while(firstLink.getLastLink()!=null){
-//			firstLink=firstLink.getLastLink();
-//
-//		}
-
+        //		StringBuilder sb=new StringBuilder();
+        //		NodeLink firstLink = nodeLink;
+        //		while(firstLink.getLastLink()!=null){
+        //			firstLink=firstLink.getLastLink();
+        //
+        //		}
 
         List<MoveNode> unMovenode = new ArrayList();
         NodeLink nextLink = nodeLink.getNextLink();
@@ -189,8 +190,8 @@ public abstract class SearchEngine implements Runnable {
             return -(maxScore - lastLink.depth);
         }
         boolean isMove = false;
-//		是否被将军
-//		boolean isChecked = chessQuiescMove.checked(play);
+        //		是否被将军
+        //		boolean isChecked = chessQuiescMove.checked(play);
         //设置前上步是否将军
         lastLink.chk = isChecked;
         if (isLongChk(lastLink)) { //判断长将
@@ -264,15 +265,16 @@ public abstract class SearchEngine implements Runnable {
         if (!lastLink.chk) {
             return false;
         }
-//		int num=0;
+        //		int num=0;
         NodeLink tempLink = lastLink.getLastLink();
         while (tempLink.getMoveNode() != null) {
-            if (tempLink.boardZobrist32 == lastLink.boardZobrist32 && tempLink.boardZobrist64 == lastLink.boardZobrist64) {
-//				num++;
-//				return true;
-//				if(num>=2){
+            if (tempLink.boardZobrist32 == lastLink.boardZobrist32
+                && tempLink.boardZobrist64 == lastLink.boardZobrist64) {
+                //				num++;
+                //				return true;
+                //				if(num>=2){
                 return true;
-//				}
+                //				}
             }
             if (tempLink.getMoveNode().isEatChess()) {
                 return false;
@@ -285,8 +287,7 @@ public abstract class SearchEngine implements Runnable {
     /**
      * @return
      * @author pengjiu
-     * @date:Sep 21, 2011 5:55:06 PM
-     * 功能：和棋判断
+     * @date:Sep 21, 2011 5:55:06 PM 功能：和棋判断
      */
     protected boolean isDraw(NodeLink lastLink) {
         //无任何进攻棋子

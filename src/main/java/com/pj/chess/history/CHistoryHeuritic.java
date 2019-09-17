@@ -11,16 +11,12 @@ public class CHistoryHeuritic {
     private static final Object lock = new Object();
     public static int[][] cHistory = new int[ChessConstant.chessRoles_eight.length][256];
 
-    public static void main(String[] args) {
-        System.out.println(24 >> 2);
-    }
-
     public void setCHistoryGOOD(MoveNode moveNode, int depth) {
         if (moveNode != null) {
             cHistory[ChessConstant.chessRoles_eight[moveNode.srcChess]][moveNode.destSite] += 2 << depth;
-//		 		if(cHistory[moveNode.srcSite][moveNode.destSite]>65535){
-//		 			cHistory[moveNode.srcSite][moveNode.destSite]-=10000;
-//		 		}
+            //		 		if(cHistory[moveNode.srcSite][moveNode.destSite]>65535){
+            //		 			cHistory[moveNode.srcSite][moveNode.destSite]-=10000;
+            //		 		}
         }
     }
 
@@ -39,6 +35,5 @@ public class CHistoryHeuritic {
             Arrays.sort(moveNodeList.tables, 0, moveNodeList.size);
         }
     }
-
 
 }

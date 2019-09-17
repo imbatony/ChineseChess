@@ -13,6 +13,9 @@ import java.util.regex.Pattern;
 import static com.pj.chess.ChessConstant.*;
 
 public class Tools {
+
+    public static final Pattern PATTERN = Pattern.compile("([^\\s])++");
+
     public static int[] arrayCopy(int[] srcArray) {
         int length = srcArray.length;
         int[] toArray = new int[length];
@@ -22,12 +25,11 @@ public class Tools {
 
     public static String[] fenToFENArray(String fen) {
         String[] fenArray = new String[8];
-        Pattern p = Pattern.compile("([^\\s])++");
-        Matcher m = p.matcher(fen);
+        Matcher m = PATTERN.matcher(fen);
         int i = 0;
         while (m.find()) {
             fenArray[i++] = m.group(0);
-//			System.out.println(m.group(0));
+            //			System.out.println(m.group(0));
         }
         return fenArray;
     }
@@ -56,7 +58,7 @@ public class Tools {
         int[] board = new int[90];
         int boardIndex = 0;
 
-        String[] libArr = new String[]{str};
+        String[] libArr = new String[] {str};
         int i = 0;
         while (libArr[0].length() > i) {
             if (libArr[0].charAt(i) >= 'a' && libArr[0].charAt(i) <= 'z') {
@@ -68,21 +70,15 @@ public class Tools {
                 int chess = m.get(libArr[0].charAt(i));
                 m.put(libArr[0].charAt(i), chess + 1);
                 board[boardIndex] = chess;
-//				System.out.println(boardIndex+"  "+chess);
                 boardIndex++;
             } else if (libArr[0].charAt(i) >= '0' && libArr[0].charAt(i) <= '9') {
                 boardIndex += Integer.valueOf(libArr[0].charAt(i) + "");
-            } else if (libArr[0].charAt(i) == '/') {
-//				boardIndex+=7;
             }
             i++;
         }
         return board;
     }
 
-    public static void main(String[] args) {
-        System.out.println(System.getProperty("file.separator"));
-    }
 
     public static int[] exchange(int[] srcArray) {
         int[] temp = arrayCopy(srcArray);
@@ -98,7 +94,6 @@ public class Tools {
         }
         return temp;
     }
-
 
     public static boolean isBoardTo255(int site) {
         int row = site / 16;
@@ -120,7 +115,6 @@ public class Tools {
         }
         System.out.println();
     }
-
 
     public static void writeToFile(String fen) {
         java.io.BufferedOutputStream buff = null;
@@ -145,11 +139,9 @@ public class Tools {
 
     public static void saveFEN(int[] board, NodeLink backMove) {
 
+        String[] sFen = new String[] {"", "P", "A", "B", "C", "N", "R", "K", "p", "a", "b", "c", "n", "r", "k"};
 
-        String[] sFen = new String[]{"", "P", "A", "B", "C", "N", "R", "K", "p", "a", "b", "c", "n", "r", "k"};
-
-
-//		String s="c6c5  rnbakabnr/9/1c5c1/p1p1p1p1p/9/9/P1P1P1P1P/1C5C1/9/RNBAKABNR b - - 0 1";
+        //		String s="c6c5  rnbakabnr/9/1c5c1/p1p1p1p1p/9/9/P1P1P1P1P/1C5C1/9/RNBAKABNR b - - 0 1";
         int t = 0;
         StringBuilder sb = null;
         for (int i = 0; i < board.length; i++) {
@@ -190,7 +182,6 @@ public class Tools {
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         } catch (IOException e) {
-            // TODO Auto-generated catch block
             e.printStackTrace();
         } finally {
             try {
@@ -236,7 +227,8 @@ public class Tools {
                 String destSite = moveSite.substring(2, 4);
 
                 int play = 0;
-                if (fenArray[2].equalsIgnoreCase("b")) { //黑方
+                //黑方
+                if ("b".equalsIgnoreCase(fenArray[2])) {
                     play = BLACKPLAYSIGN;
                     b++;
                 } else { //红方
@@ -258,10 +250,12 @@ public class Tools {
                 int srcSiteBorad = getBoradSite(srcRowInt, srcColInt);
                 int destSiteBorad = getBoradSite(destRowInt, destColInt);
 
-                MoveNode moveNode = new MoveNode(srcSiteBorad, destSiteBorad, boardTemp[srcSiteBorad], boardTemp[destSiteBorad], 0);
+                MoveNode moveNode = new MoveNode(srcSiteBorad, destSiteBorad, boardTemp[srcSiteBorad],
+                    boardTemp[destSiteBorad], 0);
 
                 tranTable.setTranZobrist(moveNode);
-//					System.out.println("book->"+tranTable.boardZobrist32+"\t"+tranTable.boardZobrist64);
+                //					System.out.println("book->"+tranTable.boardZobrist32+"\t"+tranTable
+                // .boardZobrist64);
             }
         } catch (FileNotFoundException e) {
             e.printStackTrace();
@@ -296,24 +290,17 @@ public class Tools {
                 }
             }
         }
-//			TranspositionTable.fenLib
+        //			TranspositionTable.fenLib
     }
 
     public static int getBoradSite(int row, int col) {
-//			int site=BOARDSTARTINDEX+row*16;
-//			site+=COLOFFSET+col;
+
         int site = row * 9;
         site += col;
         return site;
     }
 
     public static void printBitBoard(ChessParam chessParam) {
-//		System.out.println("===========全局===========");
-//		System.out.println(chessParam.maskBoardCheeses);
-//		System.out.println("===========红方===========");
-//		System.out.println(chessParam.bitBoards[REDPLAYSIGN]);
-//		System.out.println("===========黑方===========");
-//		System.out.println(chessParam.bitBoards[BLACKPLAYSIGN]);
         BitBoard bitBoard = new BitBoard();
         for (int i = 0; i < chessParam.maskBoardPersonalRoleChesses.length; i++) {
             bitBoard.assignXor(chessParam.maskBoardPersonalRoleChesses[i]);
@@ -321,6 +308,5 @@ public class Tools {
         System.out.println("===========各角色棋子组合一起===========");
         System.out.println(bitBoard);
     }
-
 
 }

@@ -1,6 +1,5 @@
 package com.pj.chess;
 
-
 public class BitBoard {
     private int Low, Mid1, Mid2, Hi;
 
@@ -80,9 +79,6 @@ public class BitBoard {
         return a.Hi == b.Hi && a.Low == b.Low && a.Mid1 == b.Mid1 && a.Mid2 == b.Mid2;
     }
 
-    public static void main(String[] args) {
-        System.out.println(Integer.numberOfTrailingZeros(4));
-    }
 
     public void assignAnd(final BitBoard Arg) {
         Low &= Arg.Low;
@@ -126,28 +122,27 @@ public class BitBoard {
     }
 
     public int MSB(int play) {
-        switch (play) {
-            case ChessConstant.REDPLAYSIGN:
-                if (Low != 0) {
-                    return Msb32(Low);
-                } else if (Mid1 != 0) {
-                    return Msb32(Mid1) + 27;
-                } else if (Mid2 != 0) {
-                    return Msb32(Mid2) + 54;
-                } else if (Hi != 0) {
-                    return Msb32(Hi) + 81;
-                }
-                break;
-            case ChessConstant.BLACKPLAYSIGN:
-                if (Hi != 0) {
-                    return Msb32(Hi) + 81;
-                } else if (Mid2 != 0) {
-                    return Msb32(Mid2) + 54;
-                } else if (Mid1 != 0) {
-                    return Msb32(Mid1) + 27;
-                } else if (Low != 0) {
-                    return Msb32(Low);
-                }
+        if (play == ChessConstant.REDPLAYSIGN) {
+            if (Low != 0) {
+                return Msb32(Low);
+            } else if (Mid1 != 0) {
+                return Msb32(Mid1) + 27;
+            } else if (Mid2 != 0) {
+                return Msb32(Mid2) + 54;
+            } else if (Hi != 0) {
+                return Msb32(Hi) + 81;
+            }
+
+        } else if (play == ChessConstant.BLACKPLAYSIGN) {
+            if (Hi != 0) {
+                return Msb32(Hi) + 81;
+            } else if (Mid2 != 0) {
+                return Msb32(Mid2) + 54;
+            } else if (Mid1 != 0) {
+                return Msb32(Mid1) + 27;
+            } else if (Low != 0) {
+                return Msb32(Low);
+            }
         }
         return -1;
     }
@@ -156,6 +151,7 @@ public class BitBoard {
         return Count32(Low) + Count32(Mid1) + Count32(Mid2) + Count32(Hi);
     }
 
+    @Override
     public String toString() {
         StringBuilder sb = new StringBuilder();
         for (int i = 0; i < 27; i++) {

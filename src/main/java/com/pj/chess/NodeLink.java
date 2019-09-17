@@ -60,7 +60,7 @@ public class NodeLink implements Serializable {
         if (nextLink != null) {
             nextLink.lastLink = this;
         }
-//			nextLink.depth=this.depth+1;
+        //			nextLink.depth=this.depth+1;
     }
 
     public boolean isNullMove() {
@@ -91,21 +91,23 @@ public class NodeLink implements Serializable {
         this.depth = depth;
     }
 
+    @Override
     public String toString() {
         if (this == null) {
             return "the NodeLink is NULL !";
         }
         StringBuilder sb = new StringBuilder();
         NodeLink firstLink = this;
-//			while(firstLink.lastLink!=null){
-//				firstLink=firstLink.lastLink;
-//				
-//			}
+        //			while(firstLink.lastLink!=null){
+        //				firstLink=firstLink.lastLink;
+        //
+        //			}
         NodeLink nextLink = firstLink;
         sb.append("==========================================================\n");
         while (nextLink != null) {
             MoveNode movenode = nextLink.getMoveNode();
-            sb.append(" 第->").append(nextLink.depth).append("步 ").append(movenode).append(" " + (nextLink.isQuiesc ? "静态搜索" : "正常搜索") + "\t" + (nextLink.chk ? "将军" : "无将军") + "\n");
+            sb.append(" 第->").append(nextLink.depth).append("步 ").append(movenode).append(
+                " " + (nextLink.isQuiesc ? "静态搜索" : "正常搜索") + "\t" + (nextLink.chk ? "将军" : "无将军") + "\n");
             nextLink = nextLink.getNextLink();
         }
         sb.append("==========================================================\n");

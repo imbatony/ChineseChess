@@ -6,20 +6,19 @@ import com.pj.chess.ChessConstant;
 import static com.pj.chess.ChessConstant.*;
 
 /**
- * @author pengjiu
- * 为防止多线程下，一些所需要的参数变量同步问题
+ * @author pengjiu 为防止多线程下，一些所需要的参数变量同步问题
  */
 public class ChessParam {
     //每个棋子对应attackAndDefenseChesses 的下标表
-    public static final int[] indexOfAttackAndDefense = new int[]{0,
-            0, 1, 1, 0, 0, 0, 1,
-            0, 1, 1, 0, 0, 0, 1
+    public static final int[] indexOfAttackAndDefense = new int[] {0,
+        0, 1, 1, 0, 0, 0, 1,
+        0, 1, 1, 0, 0, 0, 1
     };
     public int[] board;     // 棋盘->棋子
     public int[] allChess; //棋子->棋盘
-//	public int redBaseScore=0;  //红方分数
+    //	public int redBaseScore=0;  //红方分数
 
-//	public int blackBaseScore=0; //黑方分数
+    //	public int blackBaseScore=0; //黑方分数
     public int[] baseScore = new int[2];
     public int[] boardBitRow; //位棋盘  行
     public int[] boardBitCol; //位棋盘  列
@@ -33,7 +32,9 @@ public class ChessParam {
     //[玩家][0攻击棋子数量  1防御棋子数量]
     private int[][] attackAndDefenseChesses = new int[2][2];
 
-    public ChessParam(int[] board, int[] allChess, int[] baseScore, int[] boardBitRow, int[] boardBitCol, int[] boardRemainChess, BitBoard maskBoardCheeses, BitBoard[] bitBoards, BitBoard[] maskBoardPersonalRoleChesses) {
+    public ChessParam(int[] board, int[] allChess, int[] baseScore, int[] boardBitRow, int[] boardBitCol,
+                      int[] boardRemainChess, BitBoard maskBoardCheeses, BitBoard[] bitBoards,
+                      BitBoard[] maskBoardPersonalRoleChesses) {
         this.board = board;
         this.allChess = allChess;
         this.baseScore = baseScore;
@@ -60,39 +61,28 @@ public class ChessParam {
         //棋子copy
         int[] allChessTemp = param.allChess;
         this.allChess = new int[allChessTemp.length];
-        for (int i = 0; i < allChessTemp.length; i++) {
-            this.allChess[i] = allChessTemp[i];
-        }
+        System.arraycopy(allChessTemp, 0, this.allChess, 0, allChessTemp.length);
         //棋盘copy
         int[] boardTemp = param.board;
         this.board = new int[boardTemp.length];
-        for (int i = 0; i < boardTemp.length; i++) {
-            this.board[i] = boardTemp[i];
-        }
+        System.arraycopy(boardTemp, 0, this.board, 0, boardTemp.length);
         //位棋盘行
         int[] boardBitRowTemp = param.boardBitRow;
         this.boardBitRow = new int[boardBitRowTemp.length];
-        for (int i = 0; i < boardBitRowTemp.length; i++) {
-            this.boardBitRow[i] = boardBitRowTemp[i];
-        }
+        System.arraycopy(boardBitRowTemp, 0, this.boardBitRow, 0, boardBitRowTemp.length);
         //位横向列
         int[] boardBitColTemp = param.boardBitCol;
         this.boardBitCol = new int[boardBitColTemp.length];
-        for (int i = 0; i < boardBitColTemp.length; i++) {
-            this.boardBitCol[i] = boardBitColTemp[i];
-        }
+        System.arraycopy(boardBitColTemp, 0, this.boardBitCol, 0, boardBitColTemp.length);
         //棋子数量
         int[] boardRemainChessTemp = param.boardRemainChess;
         this.boardRemainChess = new int[boardRemainChessTemp.length];
-        for (int i = 0; i < boardRemainChessTemp.length; i++) {
-            this.boardRemainChess[i] = boardRemainChessTemp[i];
-        }
+        System.arraycopy(boardRemainChessTemp, 0, this.boardRemainChess, 0, boardRemainChessTemp.length);
         // 攻击性棋子和防御性棋子数量
         int[][] attackAndDefenseChessesTemp = param.attackAndDefenseChesses;
         for (int i = 0; i < attackAndDefenseChessesTemp.length; i++) {
-            for (int j = 0; j < attackAndDefenseChessesTemp[i].length; j++) {
-                this.attackAndDefenseChesses[i][j] = attackAndDefenseChessesTemp[i][j];
-            }
+            System.arraycopy(attackAndDefenseChessesTemp[i], 0, this.attackAndDefenseChesses[i], 0,
+                attackAndDefenseChessesTemp[i].length);
         }
         //所有子力的位棋盘
         this.maskBoardCheeses = new BitBoard(param.maskBoardCheeses);
@@ -106,7 +96,6 @@ public class ChessParam {
         for (int i = 0; i < param.maskBoardPersonalRoleChesses.length; i++) {
             this.maskBoardPersonalRoleChesses[i] = new BitBoard(param.maskBoardPersonalRoleChesses[i]);
         }
-
 
         //分数
         this.baseScore[ChessConstant.REDPLAYSIGN] = param.baseScore[ChessConstant.REDPLAYSIGN];
@@ -127,8 +116,7 @@ public class ChessParam {
     }
 
     /**
-     * @param chessRole 棋子角色
-     *                  减少棋子数量
+     * @param chessRole 棋子角色 减少棋子数量
      */
     public void reduceChessesNum(int chessRole) {
         boardRemainChess[chessRole]--;
@@ -136,8 +124,7 @@ public class ChessParam {
     }
 
     /**
-     * @param chessRole 柜子角色
-     *                  增加棋子数量
+     * @param chessRole 柜子角色 增加棋子数量
      */
     public void increaseChessesNum(int chessRole) {
         boardRemainChess[chessRole]++;
@@ -182,8 +169,6 @@ public class ChessParam {
                 int chessRole = chessRoles[board[allChess[i]]];
                 int play = i < 32 ? BLACKPLAYSIGN : REDPLAYSIGN;
                 increaseChessesNum(chessRole);
-//				chessParamCont.baseScore[play]+=EvaluateComputeMiddle.chessBaseScore[i];
-//				chessParamCont.baseScore[play]+=new EvaluateComputeMiddle(chessParamCont).chessAttachScore(chessRole,allChess[i]);
                 maskBoardCheeses.assignXor(MaskChesses[site]);
                 bitBoards[play].assignXor(MaskChesses[site]);
                 maskBoardPersonalRoleChesses[chessRole].assignXor(MaskChesses[site]);
