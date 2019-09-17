@@ -50,12 +50,7 @@ public class ChessParam {
         this.copyToSelf(param);
     }
 
-    public static void main(String[] args) {
-		/*ChessParam chess1 = new ChessParam(new int[64],new int[32],0,0);
-		ChessParam chess2 = new ChessParam(chess1);
-		chess1.allChess[0]=10;
-		System.out.println(chess2.allChess[0]);*/
-    }
+
 
     public void copyToSelf(ChessParam param) {
         //棋子copy

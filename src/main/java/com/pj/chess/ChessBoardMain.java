@@ -1,5 +1,6 @@
 package com.pj.chess;
 
+import com.google.common.util.concurrent.ThreadFactoryBuilder;
 import com.pj.chess.chessmove.ChessMovePlay;
 import com.pj.chess.chessmove.MoveNode;
 import com.pj.chess.chessparam.ChessParam;
@@ -15,6 +16,10 @@ import java.awt.event.*;
 import java.awt.image.BufferedImage;
 import java.io.*;
 import java.net.URL;
+import java.util.concurrent.LinkedBlockingQueue;
+import java.util.concurrent.ThreadFactory;
+import java.util.concurrent.ThreadPoolExecutor;
+import java.util.concurrent.TimeUnit;
 
 import static com.pj.chess.ChessConstant.*;
 
@@ -41,6 +46,7 @@ public class ChessBoardMain extends JFrame {
     private static final URL LOSSURL = ChessBoardMain.class.getResource(lossPath);
     private static ComputerLevel computerLevel = ComputerLevel.greenHand; //默认
     private static boolean isSound = false;
+    private final ThreadPoolExecutor singleThreadPool;
     int lastTimeCheckedSite = -1; //上次选中棋子的位置
     JLabel[] buttons = new JLabel[BOARDSIZE90];
     int play = 1;
@@ -53,7 +59,6 @@ public class ChessBoardMain extends JFrame {
     ChessMovePlay cmp = null;
     AICoreHandler _AIThink = new AICoreHandler();
     AICoreHandler backstageAIThink = new AICoreHandler();
-    //	public static List<MoveNode> backMove=new ArrayList<MoveNode>();
     NodeLink moveHistory;
     int turn_num = 0;//回合数
     ChessParam chessParamCont;
@@ -68,6 +73,13 @@ public class ChessBoardMain extends JFrame {
 
     public ChessBoardMain() {
         super("中国象棋");
+
+        ThreadFactory namedThreadFactory = new ThreadFactoryBuilder()
+            .setNameFormat("chinese-pool-%d").build();
+        this.singleThreadPool = new ThreadPoolExecutor(1, 1,
+            0L, TimeUnit.MILLISECONDS,
+            new LinkedBlockingQueue<>(1024), namedThreadFactory, new ThreadPoolExecutor.AbortPolicy());
+
         setCenter();
 
         JPanel constrol = new JPanel();
@@ -189,48 +201,48 @@ public class ChessBoardMain extends JFrame {
 
     private JMenuBar setJMenuBar() {
         JMenuBar jmb = new JMenuBar();
-        JMenu menu_file = new JMenu("文件");
+        JMenu menuFile = new JMenu("文件");
         JMenuItem create = new JMenuItem("新建");
         JMenuItem save = new JMenuItem("保存");
-        JRadioButtonMenuItem mi_6 = new JRadioButtonMenuItem("菜鸟", true);
-        JRadioButtonMenuItem mi_7 = new JRadioButtonMenuItem("入门", false);
+        JRadioButtonMenuItem mi6 = new JRadioButtonMenuItem("菜鸟", true);
+        JRadioButtonMenuItem mi7 = new JRadioButtonMenuItem("入门", false);
         JRadioButtonMenuItem mi_8 = new JRadioButtonMenuItem("业余", false);
         JRadioButtonMenuItem mi_9 = new JRadioButtonMenuItem("专家", false);
         JRadioButtonMenuItem mi_10 = new JRadioButtonMenuItem("大师", false);
         JRadioButtonMenuItem mi_11 = new JRadioButtonMenuItem("无敌", false);
 
         ButtonGroup group = new ButtonGroup();
-        group.add(mi_6);
-        group.add(mi_7);
+        group.add(mi6);
+        group.add(mi7);
         group.add(mi_8);
         group.add(mi_9);
         group.add(mi_10);
         group.add(mi_11);
         create.addActionListener(menuItemAction);
         save.addActionListener(menuItemAction);
-        mi_6.addActionListener(menuItemAction);
-        mi_7.addActionListener(menuItemAction);
+        mi6.addActionListener(menuItemAction);
+        mi7.addActionListener(menuItemAction);
         mi_8.addActionListener(menuItemAction);
         mi_9.addActionListener(menuItemAction);
         mi_10.addActionListener(menuItemAction);
         mi_11.addActionListener(menuItemAction);
 
         create.setMnemonic(10);
-        mi_6.setMnemonic(2);
-        mi_7.setMnemonic(3);
+        mi6.setMnemonic(2);
+        mi7.setMnemonic(3);
         mi_8.setMnemonic(4);
         mi_9.setMnemonic(5);
         mi_10.setMnemonic(6);
-        menu_file.setMnemonic('0');
-        menu_file.add(create);
-        menu_file.add(mi_6);
-        menu_file.add(mi_7);
-        menu_file.add(mi_8);
-        menu_file.add(mi_9);
-        menu_file.add(mi_10);
-        menu_file.add(mi_11);
-        menu_file.add(save);
-        jmb.add(menu_file);
+        menuFile.setMnemonic('0');
+        menuFile.add(create);
+        menuFile.add(mi6);
+        menuFile.add(mi7);
+        menuFile.add(mi_8);
+        menuFile.add(mi_9);
+        menuFile.add(mi_10);
+        menuFile.add(mi_11);
+        menuFile.add(save);
+        jmb.add(menuFile);
         //------------------------------------------------------
         JMenu menu_set = new JMenu("设置");
         JCheckBoxMenuItem redCmp = new JCheckBoxMenuItem("电脑红方", play != REDPLAYSIGN);
@@ -394,37 +406,31 @@ public class ChessBoardMain extends JFrame {
         if (isBackstageThink && (guessLink != null && moveHistory != null)) {
             //查看是否猜中
             if (guessLink.getMoveNode().equals(moveHistory.getMoveNode())) {
-                new Thread() {
-                    @Override
-                    public void run() {
-                        System.out.println("---->猜测命中！！");
-                        try {
-                            //加入时间控制
-                            backstageAIThink.launchTimer();
-                            backstageThinkThread.join();
-                        } catch (InterruptedException e) {
-                            e.printStackTrace();
-                            computeThink();
-                        }
-                        computeAIMoving(guessLink.getNextLink());
-                    }
-                }.start();
-            } else {
-                new Thread() {
-                    @Override
-                    public void run() {
-                        System.out.println("--->未命中");
-                        //如果没中进行运算
-                        backstageAIThink.setStop();
-                        try {
-                            backstageThinkThread.join();
-                        } catch (InterruptedException e) {
-                            e.printStackTrace();
-                        }
-                        System.out.println("--->重新思考");
+                this.singleThreadPool.execute(() -> {
+                    System.out.println("---->猜测命中！！");
+                    try {
+                        //加入时间控制
+                        backstageAIThink.launchTimer();
+                        backstageThinkThread.join();
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
                         computeThink();
                     }
-                }.start();
+                    computeAIMoving(guessLink.getNextLink());
+                });
+            } else {
+                this.singleThreadPool.execute(() -> {
+                    System.out.println("--->未命中");
+                    //如果没中进行运算
+                    backstageAIThink.setStop();
+                    try {
+                        backstageThinkThread.join();
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                    System.out.println("--->重新思考");
+                    computeThink();
+                });
             }
         } else {
             computeThink();
@@ -432,15 +438,12 @@ public class ChessBoardMain extends JFrame {
     }
 
     private void computeThink() {
-        new Thread() {
-            @Override
-            public void run() {
-                _AIThink.setLocalVariable(computerLevel, chessParamCont, moveHistory);
-                _AIThink.launchTimer();
-                _AIThink.run();
-                computeAIMoving(moveHistory.getNextLink());
-            }
-        }.start();
+        this.singleThreadPool.execute(() -> {
+            _AIThink.setLocalVariable(computerLevel, chessParamCont, moveHistory);
+            _AIThink.launchTimer();
+            _AIThink.run();
+            computeAIMoving(moveHistory.getNextLink());
+        });
     }
 
     private void computeAIMoving(NodeLink nodeLink) {
@@ -461,18 +464,13 @@ public class ChessBoardMain extends JFrame {
             return;
         }
         if (moveHistory.getNextLink() != null && moveHistory.getNextLink().getMoveNode() != null) {
-
-            backstageThinkThread = new Thread() {
-                @Override
-                public void run() {
-                    //猜测的着法
-                    guessLink = moveHistory.getNextLink();
-                    backstageAIThink.setLocalVariable(computerLevel, chessParamCont, guessLink);
-                    System.out.println("---->开始猜测(" + guessLink.getMoveNode() + ")");
-                    backstageAIThink.guessRun(guessLink.getMoveNode());
-                }
-            };
-            backstageThinkThread.start();
+            this.singleThreadPool.execute(() -> {
+                //猜测的着法
+                guessLink = moveHistory.getNextLink();
+                backstageAIThink.setLocalVariable(computerLevel, chessParamCont, guessLink);
+                System.out.println("---->开始猜测(" + guessLink.getMoveNode() + ")");
+                backstageAIThink.guessRun(guessLink.getMoveNode());
+            });
         }
     }
 
@@ -546,6 +544,7 @@ public class ChessBoardMain extends JFrame {
     }
 
     class ButtonActionListener implements ActionListener, WindowListener, MouseListener {
+        @Override
         public void actionPerformed(ActionEvent e) {
             Button sour = (Button)e.getSource();
             if ("悔棋".equals(sour.getLabel())) {
@@ -610,56 +609,57 @@ public class ChessBoardMain extends JFrame {
             lastTimeCheckedSite = moveNode.destSite;
         }
 
+        @Override
         public void windowActivated(WindowEvent arg0) {
-            // TODO Auto-generated method stub
 
         }
 
+        @Override
         public void windowClosed(WindowEvent arg0) {
-            // TODO Auto-generated method stub
 
         }
 
+        @Override
         public void windowClosing(WindowEvent arg0) {
-            // TODO Auto-generated method stub
             System.exit(1);
         }
 
+        @Override
         public void windowDeactivated(WindowEvent arg0) {
-            // TODO Auto-generated method stub
 
         }
 
+        @Override
         public void windowDeiconified(WindowEvent arg0) {
-            // TODO Auto-generated method stub
 
         }
 
+        @Override
         public void windowIconified(WindowEvent arg0) {
-            // TODO Auto-generated method stub
 
         }
 
+        @Override
         public void windowOpened(WindowEvent arg0) {
-            // TODO Auto-generated method stub
 
         }
 
+        @Override
         public void mouseClicked(MouseEvent e) {
-            // TODO Auto-generated method stub
 
         }
 
+        @Override
         public void mouseEntered(MouseEvent e) {
-            // TODO Auto-generated method stub
 
         }
 
+        @Override
         public void mouseExited(MouseEvent e) {
-            // TODO Auto-generated method stub
 
         }
 
+        @Override
         public void mousePressed(MouseEvent e) {
             if (android[play]) {
                 return;
@@ -699,13 +699,14 @@ public class ChessBoardMain extends JFrame {
 
         }
 
+        @Override
         public void mouseReleased(MouseEvent e) {
-            // TODO Auto-generated method stub
 
         }
     }
 
     class MenuItemActionListener implements ActionListener {
+        @Override
         public void actionPerformed(ActionEvent e) {
             String actionCommand = e.getActionCommand();
             if ("新建".equals(actionCommand)) {
